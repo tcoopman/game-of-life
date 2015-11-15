@@ -7,50 +7,37 @@ import Time exposing (..)
 findNeighbours : Universe -> X -> Y -> Neighbours
 findNeighbours universe x y =
   let
-    isNeighbour positionedCell =
-      let
-        position = positionedCell.position
-      in
-        (position.x == x - 1 || position.x == x + 1 || position.x == x)
-        &&
-        (position.y == y - 1 || position.y == y + 1 || position.y == y)
-        &&
-        (position.x /= x || position.y /= y)
+    isNeighbour (position, _) =
+      (position.x == x - 1 || position.x == x + 1 || position.x == x)
+      &&
+      (position.y == y - 1 || position.y == y + 1 || position.y == y)
+      &&
+      (position.x /= x || position.y /= y)
   in
     universe
       |> List.filter isNeighbour
-      |> List.map .cell
+      |> List.map snd
 
 evolveCell : Universe -> PositionedCell -> PositionedCell
-evolveCell universe positionedCell =
+evolveCell universe (position, cell) =
   let
-    position = positionedCell.position
     neighbours = findNeighbours universe position.x position.y
+    evolvedCell = applyRules cell neighbours
   in
-    { positionedCell
-      | cell <- applyRules positionedCell.cell neighbours
-    }
-
-x : Universe -> Int
-x universe =
-  let
-    alwaysInt maybeInt = Maybe.withDefault 0 maybeInt
-  in
-    (universe |> List.map (.x << .position) |> List.minimum |> alwaysInt) - 1
-
+    (position, evolvedCell)
 
 evolve : Universe -> Universe
 evolve universe =
   let
     alwaysInt maybeInt = Maybe.withDefault 0 maybeInt
-    minX = (universe |> List.map (.x << .position) |> List.minimum |> alwaysInt) - 1
-    minY = (universe |> List.map (.x << .position) |> List.minimum |> alwaysInt) - 1
-    maxX = (universe |> List.map (.x << .position) |> List.maximum |> alwaysInt) + 1
-    maxY = (universe |> List.map (.x << .position) |> List.maximum |> alwaysInt) + 1
+    minX = (universe |> List.map (.x << fst) |> List.minimum |> alwaysInt) - 1
+    minY = (universe |> List.map (.x << fst) |> List.minimum |> alwaysInt) - 1
+    maxX = (universe |> List.map (.x << fst) |> List.maximum |> alwaysInt) + 1
+    maxY = (universe |> List.map (.x << fst) |> List.maximum |> alwaysInt) + 1
     createDeadX y x =
-      PositionedCell (Position x y) Dead
+      ((Position x y), Dead)
     createDeadY x y =
-      PositionedCell (Position x y) Dead
+      ((Position x y), Dead)
     expandedUniverse =
       universe
         |> (++) (List.map (createDeadX minY) [minX .. maxX])

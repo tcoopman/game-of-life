@@ -5,7 +5,7 @@ import GameOfLive
 
 create : X -> Y -> Cell -> PositionedCell
 create x y cell =
-  PositionedCell (Position x y) cell
+  ((Position x y), cell)
 
 blinker : Universe
 blinker =

@@ -14,13 +14,10 @@ type alias ViewPort =
 selectRow : Universe -> ViewPort -> List PositionedCell
 selectRow universe viewPort =
   let
-    inBounds positionedCell =
-      let
-        position = positionedCell.position
-      in
-        position.y == viewPort.yMin
-        && position.x >= viewPort.xMin
-        && position.x <= viewPort.xMax
+    inBounds (position, _) =
+      position.y == viewPort.yMin
+      && position.x >= viewPort.xMin
+      && position.x <= viewPort.xMax
   in
     List.filter inBounds universe
 
@@ -35,13 +32,10 @@ viewRow universe viewPort =
       (List.map viewCell row)
 
 viewCell : PositionedCell -> Html
-viewCell positionedCell =
-  let
-    position = positionedCell.position
-  in
-    div
-      [style <| cellStyle positionedCell.cell]
-      [ text ((toString position.x) ++ "," ++(toString position.y))]
+viewCell (position, cell) =
+  div
+    [style <| cellStyle cell]
+    [ text ((toString position.x) ++ "," ++(toString position.y))]
 
 view : ViewPort -> Universe -> Html
 view viewPort universe =

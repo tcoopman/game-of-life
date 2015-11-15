@@ -13,9 +13,6 @@ type alias Position =
   , y: Y
   }
 
-type alias PositionedCell =
-  { position: Position
-  , cell: Cell
-  }
+type alias PositionedCell = (Position, Cell)
 
 type alias Universe = List PositionedCell
