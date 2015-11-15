@@ -68,11 +68,11 @@ reduceAction : Cell -> Neighbours -> Action
 reduceAction cell neighbours =
   let
     actions =
-      []
-        |> (++) [underPopulationRule cell neighbours]
-        |> (++) [livesOnRule cell neighbours]
-        |> (++) [overPopulationRule cell neighbours]
-        |> (++) [reproductionRule cell neighbours]
+      [ underPopulationRule cell neighbours
+      , livesOnRule cell neighbours
+      , overPopulationRule cell neighbours
+      , reproductionRule cell neighbours
+      ]
     reducedAction =
       actions
         |> List.filter ((/=) NoOp)

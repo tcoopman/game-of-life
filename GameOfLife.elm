@@ -8,11 +8,9 @@ findNeighbours : Universe -> X -> Y -> Neighbours
 findNeighbours universe x y =
   let
     isNeighbour (position, _) =
-      (position.x == x - 1 || position.x == x + 1 || position.x == x)
-      &&
-      (position.y == y - 1 || position.y == y + 1 || position.y == y)
-      &&
-      (position.x /= x || position.y /= y)
+      (abs (position.x - x) <= 1)
+      && (abs (position.y - y) <= 1)
+      && ((x,y) /= (position.x, position.y))
   in
     universe
       |> List.filter isNeighbour
@@ -31,9 +29,9 @@ evolve universe =
   let
     alwaysInt maybeInt = Maybe.withDefault 0 maybeInt
     minX = (universe |> List.map (.x << fst) |> List.minimum |> alwaysInt) - 1
-    minY = (universe |> List.map (.x << fst) |> List.minimum |> alwaysInt) - 1
+    minY = (universe |> List.map (.y << fst) |> List.minimum |> alwaysInt) - 1
     maxX = (universe |> List.map (.x << fst) |> List.maximum |> alwaysInt) + 1
-    maxY = (universe |> List.map (.x << fst) |> List.maximum |> alwaysInt) + 1
+    maxY = (universe |> List.map (.y << fst) |> List.maximum |> alwaysInt) + 1
     createDeadX y x =
       ((Position x y), Dead)
     createDeadY x y =
