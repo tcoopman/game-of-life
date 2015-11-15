@@ -52,13 +52,14 @@ view viewPort universe =
 cellStyle : Cell -> List (String, String)
 cellStyle cell =
   let
+    (:=) = (,)
     color =
       case cell of
         Alive -> "red"
         Dead -> "gray"
   in
-    []
-      |> (++) [("width", "30px")]
-      |> (++) [("height", "30px")]
-      |> (++) [("background", color)]
-      |> (++) [("border", "1px solid gray")]
+    [ "width" := "30px"
+    , "height" := "30px"
+    , "background" := color
+    , "border" := "1px solid gray"
+    ]
