@@ -8,9 +8,13 @@ type Action = Dies | Revives | NoOp
 type alias X = Int
 type alias Y = Int
 
-type alias PositionedCell =
+type alias Position =
   { x: X
   , y: Y
+  }
+
+type alias PositionedCell =
+  { position: Position
   , cell: Cell
   }
 

@@ -15,9 +15,12 @@ selectRow : Universe -> ViewPort -> List PositionedCell
 selectRow universe viewPort =
   let
     inBounds positionedCell =
-      positionedCell.y == viewPort.yMin
-      && positionedCell.x >= viewPort.xMin
-      && positionedCell.x <= viewPort.xMax
+      let
+        position = positionedCell.position
+      in
+        position.y == viewPort.yMin
+        && position.x >= viewPort.xMin
+        && position.x <= viewPort.xMax
   in
     List.filter inBounds universe
 
@@ -33,9 +36,12 @@ viewRow universe viewPort =
 
 viewCell : PositionedCell -> Html
 viewCell positionedCell =
-  div
-    [style <| cellStyle positionedCell.cell]
-    [ text ((toString positionedCell.x) ++ "," ++(toString positionedCell.y))]
+  let
+    position = positionedCell.position
+  in
+    div
+      [style <| cellStyle positionedCell.cell]
+      [ text ((toString position.x) ++ "," ++(toString position.y))]
 
 view : ViewPort -> Universe -> Html
 view viewPort universe =

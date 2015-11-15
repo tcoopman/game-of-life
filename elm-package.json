@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
     "summary": "Game Of Life implementation",
-    "repository": "https://github.com/tcoopman/game-of-life",
+    "repository": "https://github.com/tcoopman/game-of-life.git",
     "license": "MIT",
     "source-directories": [
         "."

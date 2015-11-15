@@ -3,23 +3,27 @@ import Types exposing (..)
 import View exposing (..)
 import GameOfLive
 
+create : X -> Y -> Cell -> PositionedCell
+create x y cell =
+  PositionedCell (Position x y) cell
+
 blinker : Universe
 blinker =
-  [ PositionedCell 0 0 Dead
-  , PositionedCell 1 0 Dead
-  , PositionedCell 2 0 Dead
-  , PositionedCell 3 0 Dead
-  , PositionedCell 4 0 Dead
-  , PositionedCell 0 1 Dead
-  , PositionedCell 1 1 Alive
-  , PositionedCell 2 1 Alive
-  , PositionedCell 3 1 Alive
-  , PositionedCell 4 1 Dead
-  , PositionedCell 0 2 Dead
-  , PositionedCell 1 2 Dead
-  , PositionedCell 2 2 Dead
-  , PositionedCell 3 2 Dead
-  , PositionedCell 4 2 Dead
+  [ create 0 0 Dead
+  , create 1 0 Dead
+  , create 2 0 Dead
+  , create 3 0 Dead
+  , create 4 0 Dead
+  , create 0 1 Dead
+  , create 1 1 Alive
+  , create 2 1 Alive
+  , create 3 1 Alive
+  , create 4 1 Dead
+  , create 0 2 Dead
+  , create 1 2 Dead
+  , create 2 2 Dead
+  , create 3 2 Dead
+  , create 4 2 Dead
   ]
 
 main : Signal Html
