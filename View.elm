@@ -11,6 +11,17 @@ type alias ViewPort =
   , yMax: Y
   }
 
+sort : List PositionedCell -> List PositionedCell
+sort positions =
+  let
+    sorter (positionA, _) (positionB, _) =
+      if (positionA.x == positionB.x) then
+        compare positionA.y positionB.y
+      else
+        compare positionA.x positionB.x
+  in
+    List.sortWith sorter positions
+
 selectRow : Universe -> ViewPort -> List PositionedCell
 selectRow universe viewPort =
   let
@@ -19,8 +30,9 @@ selectRow universe viewPort =
       && position.x >= viewPort.xMin
       && position.x <= viewPort.xMax
   in
-    List.filter inBounds universe
-
+    universe
+      |> List.filter inBounds
+      |> sort
 
 viewRow : Universe -> ViewPort -> Html
 viewRow universe viewPort =

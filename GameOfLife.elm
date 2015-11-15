@@ -51,4 +51,4 @@ evolution universe =
     evolver _ universe =
       evolve universe
   in
-    Signal.foldp evolver universe (every 3000)
+    Signal.foldp evolver universe (every 9000)
