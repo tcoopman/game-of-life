@@ -28,15 +28,12 @@ blinker =
 
 spaceShip : Universe
 spaceShip =
-  [ create 0 0 Dead
-  , create 1 0 Dead
-  , create 2 0 Alive
+  [ create 2 0 Alive
   , create 0 1 Alive
-  , create 1 1 Dead
   , create 2 1 Alive
-  , create 0 2 Dead
   , create 1 2 Alive
-  , create 2 2 Alive]
+  , create 2 2 Alive
+  ]
 
 main : Signal Html
 main =
