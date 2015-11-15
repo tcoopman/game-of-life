@@ -65,8 +65,10 @@ cellStyle cell =
         Alive -> "red"
         Dead -> "gray"
   in
-    [ "width" := "30px"
-    , "height" := "30px"
+    [ "width" := "35px"
+    , "height" := "35px"
+    , "font-size" := "0.9em"
     , "background" := color
     , "border" := "1px solid gray"
+    , "color" := "rgb(59, 51, 55)"
     ]
