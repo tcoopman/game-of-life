@@ -3,41 +3,22 @@ import Types exposing (..)
 import View exposing (..)
 import GameOfLife exposing (evolution)
 
-create : X -> Y -> Cell -> PositionedCell
-create x y cell =
-  ((x, y), cell)
+create : List Position-> Universe
+create positions =
+  let
+    positionedCell position = (position, Alive)
+  in
+  List.map positionedCell positions
 
 blinker : Universe
-blinker =
-  [ create 0 0 Dead
-  , create 1 0 Dead
-  , create 2 0 Dead
-  , create 3 0 Dead
-  , create 4 0 Dead
-  , create 0 1 Dead
-  , create 1 1 Alive
-  , create 2 1 Alive
-  , create 3 1 Alive
-  , create 4 1 Dead
-  , create 0 2 Dead
-  , create 1 2 Dead
-  , create 2 2 Dead
-  , create 3 2 Dead
-  , create 4 2 Dead
-  ]
+blinker = create [(1, 1), (2, 1), (3, 1)]
 
 spaceShip : Universe
-spaceShip =
-  [ create 2 0 Alive
-  , create 0 1 Alive
-  , create 2 1 Alive
-  , create 1 2 Alive
-  , create 2 2 Alive
-  ]
+spaceShip = create [(2, 0), (0, 1), (2, 1), (1, 2), (2, 2)]
 
 main : Signal Html
 main =
   let
     viewPort = ViewPort 0 0 10 10
   in
-    Signal.map (view viewPort) (evolution spaceShip)
+    Signal.map (view viewPort) (evolution blinker)
