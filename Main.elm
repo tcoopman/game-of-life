@@ -1,7 +1,7 @@
 import Html exposing (Html)
 import Types exposing (..)
 import View exposing (..)
-import GameOfLive
+import GameOfLife exposing (evolution)
 
 create : X -> Y -> Cell -> PositionedCell
 create x y cell =
@@ -31,4 +31,4 @@ main =
   let
     viewPort = ViewPort 0 0 4 2
   in
-    Signal.map (view viewPort) (GameOfLive.evolution blinker)
+    Signal.map (view viewPort) (evolution blinker)

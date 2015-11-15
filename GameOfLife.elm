@@ -1,4 +1,4 @@
-module GameOfLive (evolution) where
+module GameOfLife (evolution) where
 
 import Rules exposing (applyRules)
 import Types exposing (..)
