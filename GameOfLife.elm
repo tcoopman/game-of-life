@@ -1,4 +1,4 @@
-module GameOfLife (evolution) where
+module GameOfLife (evolution, findCell) where
 
 import Rules exposing (applyRules)
 import Types exposing (..)
@@ -25,8 +25,8 @@ evolveCell universe ((x, y), cell) =
   in
     ((x, y), evolvedCell)
 
-findPositionedCell : Universe -> Position -> Maybe PositionedCell
-findPositionedCell universe (x, y) =
+findMaybeCell : Universe -> Position -> Maybe PositionedCell
+findMaybeCell universe (x, y) =
   let
     inBounds ((x', y'), _) = x' == x && y' == y
   in
@@ -34,9 +34,9 @@ findPositionedCell universe (x, y) =
       |> List.filter inBounds
       |> List.head
 
-findCellOrCreateDead : Universe -> Position -> PositionedCell
-findCellOrCreateDead universe position =
-  case findPositionedCell universe position of
+findCell : Universe -> Position -> PositionedCell
+findCell universe position =
+  case findMaybeCell universe position of
     Nothing -> (position, Dead)
     Just (_, cell) -> (position, cell)
 
@@ -58,13 +58,13 @@ dedupe universe =
       positions
         |> Set.fromList |> Set.toList
   in
-    List.map (findCellOrCreateDead universe) dedupedPositions
+    List.map (findCell universe) dedupedPositions
 
 evolve : Universe -> Universe
 evolve universe =
   let
     otherPositions (x, y) = [(x-1, y-1), (x, y-1), (x+1, y-1), (x-1, y), (x+1, y), (x-1, y+1), (x, y+1), (x+1, y+1)]
-    cells position = List.map (findCellOrCreateDead universe) (otherPositions position)
+    cells position = List.map (findCell universe) (otherPositions position)
     currentUniverse =
       universe
         |> List.map fst

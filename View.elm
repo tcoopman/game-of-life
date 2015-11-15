@@ -3,6 +3,7 @@ module View (ViewPort, view) where
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Types exposing (..)
+import GameOfLife exposing (findCell)
 
 type alias ViewPort =
   { xMin: X
@@ -22,29 +23,11 @@ sort positions =
   in
     List.sortWith sorter positions
 
-findPositionedCell : Universe -> Position -> Maybe PositionedCell
-findPositionedCell universe (x, y) =
-  let
-    inBounds ((x', y'), _) = x' == x && y' == y
-  in
-    universe
-      |> List.filter inBounds
-      |> List.head
-
-findCellOrCreateDead : Universe -> Position -> Cell
-findCellOrCreateDead universe position =
-  case findPositionedCell universe position of
-    Nothing -> Dead
-    Just (_, cell) -> cell
-
 selectRow : Universe -> ViewPort -> List PositionedCell
 selectRow universe viewPort =
-  let
-    findPositionedCell y x =
-      ((x, y), findCellOrCreateDead universe (x, y))
-  in
   [viewPort.xMin .. viewPort.xMax]
-    |> List.map (findPositionedCell viewPort.yMin)
+    |> List.map ((,) viewPort.yMin)
+    |> List.map (findCell universe)
 
 viewRow : Universe -> ViewPort -> Html
 viewRow universe viewPort =
