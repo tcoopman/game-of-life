@@ -1,5 +1,5 @@
 # Game Of Life
 
 Working version of the Game Of Life in Elm.
-Highly unoptimal at the moment because of a very naive implementation of the
+Highly unoptimized at the moment because of a very naive implementation of the
 infinite universe!!
