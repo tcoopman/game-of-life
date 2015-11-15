@@ -5,7 +5,7 @@ import GameOfLife exposing (evolution)
 
 create : X -> Y -> Cell -> PositionedCell
 create x y cell =
-  ((Position x y), cell)
+  ((x, y), cell)
 
 blinker : Universe
 blinker =

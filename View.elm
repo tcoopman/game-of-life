@@ -14,25 +14,37 @@ type alias ViewPort =
 sort : List PositionedCell -> List PositionedCell
 sort positions =
   let
-    sorter (positionA, _) (positionB, _) =
-      if (positionA.x == positionB.x) then
-        compare positionA.y positionB.y
+    sorter ((x1, y1), _) ((x2, y2), _) =
+      if (x1 == x2) then
+        compare y1 y2
       else
-        compare positionA.x positionB.x
+        compare x1 x2
   in
     List.sortWith sorter positions
+
+findPositionedCell : Universe -> Position -> Maybe PositionedCell
+findPositionedCell universe (x, y) =
+  let
+    inBounds ((x', y'), _) = x' == x && y' == y
+  in
+    universe
+      |> List.filter inBounds
+      |> List.head
+
+findCellOrCreateDead : Universe -> Position -> Cell
+findCellOrCreateDead universe position =
+  case findPositionedCell universe position of
+    Nothing -> Dead
+    Just (_, cell) -> cell
 
 selectRow : Universe -> ViewPort -> List PositionedCell
 selectRow universe viewPort =
   let
-    inBounds (position, _) =
-      position.y == viewPort.yMin
-      && position.x >= viewPort.xMin
-      && position.x <= viewPort.xMax
+    findPositionedCell y x =
+      ((x, y), findCellOrCreateDead universe (x, y))
   in
-    universe
-      |> List.filter inBounds
-      |> sort
+  [viewPort.xMin .. viewPort.xMax]
+    |> List.map (findPositionedCell viewPort.yMin)
 
 viewRow : Universe -> ViewPort -> Html
 viewRow universe viewPort =
@@ -44,10 +56,10 @@ viewRow universe viewPort =
       (List.map viewCell row)
 
 viewCell : PositionedCell -> Html
-viewCell (position, cell) =
+viewCell ((x, y), cell) =
   div
     [style <| cellStyle cell]
-    [ text ((toString position.x) ++ "," ++(toString position.y))]
+    [ text ((toString x) ++ "," ++(toString y))]
 
 view : ViewPort -> Universe -> Html
 view viewPort universe =
