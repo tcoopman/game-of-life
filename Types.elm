@@ -3,7 +3,7 @@ module Types where
 type Cell = Alive | Dead
 type alias Neighbours = List Cell
 
-type Action = Dies | Revives | NoOp
+type LifeCycle = Dies | Revives | Same
 
 type alias X = Int
 type alias Y = Int
@@ -25,3 +25,10 @@ type alias Model =
   { universe: Universe
   , viewPort: ViewPort
   }
+
+type Action
+  = NoOp
+  | Left
+  | Right
+  | Down
+  | Up

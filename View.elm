@@ -42,8 +42,8 @@ viewCell ((x, y), cell) =
 
 
 
-view : Model -> Html
-view model =
+view : Signal.Address Action -> Model -> Html
+view address model =
   div
     [ style
       [ "display" := "flex"
@@ -51,7 +51,7 @@ view model =
       , "align-items" := "center"
       ]
     ]
-    [ Triangle.up
+    [ Triangle.up (Signal.forwardTo address (\_ -> Up))
     , div
         [ style
           [ "display" := "flex"
@@ -59,11 +59,11 @@ view model =
           , "align-items" := "center"
           ]
         ]
-        [ Triangle.left
+        [ Triangle.left (Signal.forwardTo address (\_ -> Left))
         , viewUniverse model.viewPort model.universe
-        , Triangle.right
+        , Triangle.right (Signal.forwardTo address (\_ -> Right))
         ]
-    , Triangle.down
+    , Triangle.down (Signal.forwardTo address (\_ -> Down))
     ]
 
 viewUniverse : ViewPort -> Universe -> Html
@@ -88,7 +88,7 @@ cellStyle cell =
   in
     [ "width" := "35px"
     , "height" := "35px"
-    , "font-size" := "0.9em"
+    , "font-size" := "0.8em"
     , "background" := color
     , "border" := "1px solid gray"
     , "color" := "rgb(59, 51, 55)"

@@ -32,21 +32,51 @@ pulsar =
   , (4, 14), (5, 14), (6, 14), (10, 14), (11, 14), (12, 14)
   ]
 
-evolution : Universe -> Signal Universe
-evolution universe =
-  Signal.foldp (\_ -> evolve) universe (every 500)
+actions : Signal.Mailbox (List Action)
+actions = Signal.mailbox []
+
+singleton : Action -> List Action
+singleton action = [action]
+
+address : Signal.Address Action
+address = Signal.forwardTo actions.address singleton
+
+init : Universe -> Model
+init universe =
+  { universe = universe
+  , viewPort = ViewPort 0 0 17 17
+  }
+
+update : Action -> Model -> Model
+update action model =
+  let
+    xMin = model.viewPort.xMin
+    yMin = model.viewPort.yMin
+    xMax = model.viewPort.xMax
+    yMax = model.viewPort.yMax
+  in
+    case action of
+      NoOp  -> model
+      Up    -> { model | viewPort <- ViewPort xMin (yMin - 1) xMax (yMax - 1)}
+      Down  -> { model | viewPort <- ViewPort xMin (yMin + 1) xMax (yMax + 1)}
+      Left  -> { model | viewPort <- ViewPort (xMin - 1 ) yMin (xMax - 1) yMax}
+      Right -> { model | viewPort <- ViewPort (xMin + 1 ) yMin (xMax + 1) yMax}
+
+unifiedUpdate : Message -> Model -> Model
+unifiedUpdate message model =
+  case message of
+    Evolve _ -> { model | universe <- evolve model.universe}
+    Actions actions -> List.foldl update model actions
+
+type Message = Actions (List Action) | Evolve Float
 
 main : Signal Html
 main =
   let
-    model =
-      { universe = pulsar
-      , viewPort = ViewPort 0 0 17 17
-      }
-    boundView universe =
-      view
-        { model
-          | universe <- universe
-        }
+    model = init pulsar
+    modelSignal = Signal.map Actions actions.signal
+    evolutionSignal = Signal.map Evolve (every 1000)
+    merged = Signal.merge modelSignal evolutionSignal
+    past = Signal.foldp unifiedUpdate model merged
   in
-    Signal.map boundView (evolution pulsar)
+    Signal.map (view address) past

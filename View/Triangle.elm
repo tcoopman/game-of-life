@@ -2,6 +2,7 @@ module View.Triangle (left, right, up, down) where
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (onClick)
 
 (:=) = (,)
 
@@ -14,20 +15,24 @@ sharedStyle =
   , "height" := "0"
   ]
 
-styledDiv : List (String, String) -> Html
-styledDiv style' = div [style style'] []
+styledDiv : Signal.Address () -> List (String, String) -> Html
+styledDiv address style' =
+  div
+    [ style style'
+    , onClick address ()
+    ] []
 
-left : Html
-left = styledDiv leftStyle
+left : Signal.Address () -> Html
+left address = styledDiv address leftStyle
 
-right : Html
-right = styledDiv rightStyle
+right : Signal.Address () -> Html
+right address = styledDiv address rightStyle
 
-down : Html
-down = styledDiv downStyle
+down : Signal.Address () -> Html
+down address = styledDiv address downStyle
 
-up : Html
-up = styledDiv upStyle
+up : Signal.Address () -> Html
+up address = styledDiv address upStyle
 
 leftStyle : List (String, String)
 leftStyle =
