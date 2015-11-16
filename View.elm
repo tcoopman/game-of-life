@@ -81,15 +81,23 @@ viewUniverse viewPort universe =
 cellStyle : Cell -> List (String, String)
 cellStyle cell =
   let
-    color =
+    background =
       case cell of
         Alive -> "red"
-        Dead -> "gray"
+        Dead -> "rgb(180, 180, 180)"
+    color =
+      case cell of
+        Alive -> "rgb(40, 33, 33)"
+        Dead -> "rgb(120, 120, 120)"
+
   in
     [ "width" := "35px"
     , "height" := "35px"
-    , "font-size" := "0.8em"
-    , "background" := color
-    , "border" := "1px solid gray"
-    , "color" := "rgb(59, 51, 55)"
+    , "font-size" := "0.7em"
+    , "display" := "flex"
+    , "justify-content" := "center"
+    , "align-items" := "center"
+    , "background" := background
+    , "border" := "1px solid rgb(203, 203, 203)"
+    , "color" := color
     ]
