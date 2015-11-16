@@ -39,6 +39,14 @@ evolution universe =
 main : Signal Html
 main =
   let
-    viewPort = ViewPort 0 0 17 17
+    model =
+      { universe = pulsar
+      , viewPort = ViewPort 0 0 17 17
+      }
+    boundView universe =
+      view
+        { model
+          | universe <- universe
+        }
   in
-    Signal.map (view viewPort) (evolution pulsar)
+    Signal.map boundView (evolution pulsar)

@@ -13,3 +13,15 @@ type alias Position = (X, Y)
 type alias PositionedCell = (Position, Cell)
 
 type alias Universe = List PositionedCell
+
+type alias ViewPort =
+  { xMin: X
+  , yMin: Y
+  , xMax: X
+  , yMax: Y
+  }
+
+type alias Model =
+  { universe: Universe
+  , viewPort: ViewPort
+  }

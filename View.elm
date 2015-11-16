@@ -1,4 +1,4 @@
-module View (ViewPort, view) where
+module View (view) where
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -7,13 +7,6 @@ import GameOfLife exposing (findCell)
 import View.Triangle as Triangle
 
 (:=) = (,)
-
-type alias ViewPort =
-  { xMin: X
-  , yMin: Y
-  , xMax: X
-  , yMax: Y
-  }
 
 sort : List PositionedCell -> List PositionedCell
 sort positions =
@@ -49,8 +42,8 @@ viewCell ((x, y), cell) =
 
 
 
-view : ViewPort -> Universe -> Html
-view viewPort universe =
+view : Model -> Html
+view model =
   div
     [ style
       [ "display" := "flex"
@@ -67,7 +60,7 @@ view viewPort universe =
           ]
         ]
         [ Triangle.left
-        , viewUniverse viewPort universe
+        , viewUniverse model.viewPort model.universe
         , Triangle.right
         ]
     , Triangle.down
