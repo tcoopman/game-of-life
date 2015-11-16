@@ -63,7 +63,11 @@ dedupe universe =
 evolve : Universe -> Universe
 evolve universe =
   let
-    otherPositions (x, y) = [(x-1, y-1), (x, y-1), (x+1, y-1), (x-1, y), (x+1, y), (x-1, y+1), (x, y+1), (x+1, y+1)]
+    otherPositions (x, y) =
+      [ (x-1, y-1), (x, y-1), (x+1, y-1)
+      , (x-1, y),             (x+1, y)
+      , (x-1, y+1), (x, y+1), (x+1, y+1)
+      ]
     cells position = List.map (findCell universe) (otherPositions position)
     currentUniverse =
       universe
