@@ -2,9 +2,11 @@ module View (view) where
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (onClick)
 import Types exposing (..)
 import GameOfLife exposing (findCell)
 import View.Triangle as Triangle
+import View.PlayButton as PlayButton
 
 (:=) = (,)
 
@@ -44,27 +46,31 @@ viewCell ((x, y), cell) =
 
 view : Signal.Address Action -> Model -> Html
 view address model =
-  div
-    [ style
-      [ "display" := "flex"
-      , "flex-direction" := "column"
-      , "align-items" := "center"
+  let
+    playLabel = if model.running then "Pause" else "Play"
+  in
+    div
+      [ style
+        [ "display" := "flex"
+        , "flex-direction" := "column"
+        , "align-items" := "center"
+        ]
       ]
-    ]
-    [ Triangle.up (Signal.forwardTo address (\_ -> Up))
-    , div
-        [ style
-          [ "display" := "flex"
-          , "flex-direction" := "row"
-          , "align-items" := "center"
+      [ PlayButton.button playLabel (Signal.forwardTo address (\_ -> ToggleRunning))
+      , Triangle.up (Signal.forwardTo address (\_ -> Up))
+      , div
+          [ style
+            [ "display" := "flex"
+            , "flex-direction" := "row"
+            , "align-items" := "center"
+            ]
           ]
-        ]
-        [ Triangle.left (Signal.forwardTo address (\_ -> Left))
-        , viewUniverse model.viewPort model.universe
-        , Triangle.right (Signal.forwardTo address (\_ -> Right))
-        ]
-    , Triangle.down (Signal.forwardTo address (\_ -> Down))
-    ]
+          [ Triangle.left (Signal.forwardTo address (\_ -> Left))
+          , viewUniverse model.viewPort model.universe
+          , Triangle.right (Signal.forwardTo address (\_ -> Right))
+          ]
+      , Triangle.down (Signal.forwardTo address (\_ -> Down))
+      ]
 
 viewUniverse : ViewPort -> Universe -> Html
 viewUniverse viewPort universe =

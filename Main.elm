@@ -44,7 +44,8 @@ address = Signal.forwardTo actions.address singleton
 init : Universe -> Model
 init universe =
   { universe = universe
-  , viewPort = ViewPort 0 0 17 17
+  , viewPort = ViewPort 0 0 16 16
+  , running = True
   }
 
 update : Action -> Model -> Model
@@ -57,6 +58,7 @@ update action model =
   in
     case action of
       NoOp  -> model
+      ToggleRunning -> { model | running <- not model.running }
       Up    -> { model | viewPort <- ViewPort xMin (yMin - 1) xMax (yMax - 1)}
       Down  -> { model | viewPort <- ViewPort xMin (yMin + 1) xMax (yMax + 1)}
       Left  -> { model | viewPort <- ViewPort (xMin - 1 ) yMin (xMax - 1) yMax}
@@ -65,7 +67,11 @@ update action model =
 unifiedUpdate : Message -> Model -> Model
 unifiedUpdate message model =
   case message of
-    Evolve _ -> { model | universe <- evolve model.universe}
+    Evolve _ ->
+      if model.running then
+        { model | universe <- evolve model.universe}
+      else
+        model
     Actions actions -> List.foldl update model actions
 
 type Message = Actions (List Action) | Evolve Float

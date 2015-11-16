@@ -24,10 +24,12 @@ type alias ViewPort =
 type alias Model =
   { universe: Universe
   , viewPort: ViewPort
+  , running: Bool
   }
 
 type Action
   = NoOp
+  | ToggleRunning
   | Left
   | Right
   | Down
