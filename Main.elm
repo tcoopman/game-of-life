@@ -1,7 +1,8 @@
 import Html exposing (Html)
 import Types exposing (..)
 import View exposing (..)
-import GameOfLife exposing (evolution)
+import GameOfLife exposing (evolve)
+import Time exposing (..)
 
 create : List Position-> Universe
 create positions =
@@ -30,6 +31,10 @@ pulsar =
   , (2, 12), (7, 12), (9, 12), (14, 12)
   , (4, 14), (5, 14), (6, 14), (10, 14), (11, 14), (12, 14)
   ]
+
+evolution : Universe -> Signal Universe
+evolution universe =
+  Signal.foldp (\_ -> evolve) universe (every 500)
 
 main : Signal Html
 main =

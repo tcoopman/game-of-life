@@ -1,8 +1,7 @@
-module GameOfLife (evolution, findCell) where
+module GameOfLife (evolve, findCell) where
 
 import Rules exposing (applyRules)
 import Types exposing (..)
-import Time exposing (..)
 import Set exposing (..)
 
 isNeighbour : Position -> Position -> Bool
@@ -69,7 +68,3 @@ evolve universe =
     currentUniverse
       |> List.map (evolveCell universe)
       |> List.filter ((==) Alive << snd)
-
-evolution : Universe -> Signal Universe
-evolution universe =
-  Signal.foldp (\_ -> evolve) universe (every 500)
