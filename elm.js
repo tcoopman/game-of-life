@@ -1818,82 +1818,53 @@ Elm.GameOfLife.make = function (_elm) {
    $Rules = Elm.Rules.make(_elm),
    $Set = Elm.Set.make(_elm),
    $Signal = Elm.Signal.make(_elm),
-   $Time = Elm.Time.make(_elm),
    $Types = Elm.Types.make(_elm);
-   var dropDuplicates = function (list) {
-      return function () {
-         var step = F2(function (next,
-         _v0) {
-            return function () {
-               switch (_v0.ctor)
-               {case "_Tuple2":
-                  return A2($Set.member,
-                    next,
-                    _v0._0) ? {ctor: "_Tuple2"
-                              ,_0: _v0._0
-                              ,_1: _v0._1} : {ctor: "_Tuple2"
-                                             ,_0: A2($Set.insert,next,_v0._0)
-                                             ,_1: A2($List._op["::"],
-                                             next,
-                                             _v0._1)};}
-               _U.badCase($moduleName,
-               "between lines 47 and 49");
-            }();
-         });
-         return $List.reverse($Basics.snd(A3($List.foldl,
-         step,
-         {ctor: "_Tuple2"
-         ,_0: $Set.empty
-         ,_1: _L.fromArray([])},
-         list)));
-      }();
-   };
    var findMaybeCell = F2(function (universe,
-   _v4) {
+   _v0) {
       return function () {
-         switch (_v4.ctor)
+         switch (_v0.ctor)
          {case "_Tuple2":
             return function () {
-                 var inBounds = function (_v8) {
+                 var inBounds = function (_v4) {
                     return function () {
-                       switch (_v8.ctor)
+                       switch (_v4.ctor)
                        {case "_Tuple2":
-                          switch (_v8._0.ctor)
+                          switch (_v4._0.ctor)
                             {case "_Tuple2":
-                               return _U.eq(_v8._0._0,
-                                 _v4._0) && _U.eq(_v8._0._1,
-                                 _v4._1);}
+                               return _U.eq(_v4._0._0,
+                                 _v0._0) && _U.eq(_v4._0._1,
+                                 _v0._1);}
                             break;}
                        _U.badCase($moduleName,
-                       "on line 31, column 30 to 48");
+                       "on line 30, column 30 to 48");
                     }();
                  };
                  return $List.head($List.filter(inBounds)(universe));
               }();}
          _U.badCase($moduleName,
-         "between lines 30 and 35");
+         "between lines 29 and 34");
       }();
    });
    var findCell = F2(function (universe,
    position) {
       return function () {
-         var _v14 = A2(findMaybeCell,
+         var _v10 = A2(findMaybeCell,
          universe,
          position);
-         switch (_v14.ctor)
+         switch (_v10.ctor)
          {case "Just":
-            switch (_v14._0.ctor)
+            switch (_v10._0.ctor)
               {case "_Tuple2":
                  return {ctor: "_Tuple2"
                         ,_0: position
-                        ,_1: _v14._0._1};}
+                        ,_1: _v10._0._1};}
               break;
             case "Nothing":
             return {ctor: "_Tuple2"
                    ,_0: position
                    ,_1: $Types.Dead};}
          _U.badCase($moduleName,
-         "between lines 39 and 41");
+         "between lines 38 and 40");
       }();
    });
    var dedupe = function (universe) {
@@ -1907,90 +1878,87 @@ Elm.GameOfLife.make = function (_elm) {
          dedupedPositions);
       }();
    };
-   var findNeighbours = F3(function (universe,
-   x,
-   y) {
+   var isNeighbour = F2(function (_v14,
+   _v15) {
       return function () {
-         var isNeighbour = function (_v18) {
+         switch (_v15.ctor)
+         {case "_Tuple2":
             return function () {
-               switch (_v18.ctor)
-               {case "_Tuple2":
-                  switch (_v18._0.ctor)
-                    {case "_Tuple2":
-                       return _U.cmp($Basics.abs(_v18._0._0 - x),
-                         1) < 1 && (_U.cmp($Basics.abs(_v18._0._1 - y),
-                         1) < 1 && !_U.eq({ctor: "_Tuple2"
-                                          ,_0: x
-                                          ,_1: y},
-                         {ctor: "_Tuple2"
-                         ,_0: _v18._0._0
-                         ,_1: _v18._0._1}));}
-                    break;}
-               _U.badCase($moduleName,
-               "between lines 12 and 14");
-            }();
-         };
-         return $List.map($Basics.snd)($List.filter(isNeighbour)(universe));
+                 switch (_v14.ctor)
+                 {case "_Tuple2":
+                    return _U.cmp($Basics.abs(_v14._0 - _v15._0),
+                      1) < 1 && (_U.cmp($Basics.abs(_v14._1 - _v15._1),
+                      1) < 1 && !_U.eq({ctor: "_Tuple2"
+                                       ,_0: _v14._0
+                                       ,_1: _v14._1},
+                      {ctor: "_Tuple2"
+                      ,_0: _v15._0
+                      ,_1: _v15._1}));}
+                 _U.badCase($moduleName,
+                 "between lines 9 and 11");
+              }();}
+         _U.badCase($moduleName,
+         "between lines 9 and 11");
       }();
    });
+   var findNeighbours = F2(function (universe,
+   position) {
+      return $List.map($Basics.snd)($List.filter(function ($) {
+         return isNeighbour(position)($Basics.fst($));
+      })(universe));
+   });
    var evolveCell = F2(function (universe,
-   _v24) {
+   _v22) {
       return function () {
-         switch (_v24.ctor)
+         switch (_v22.ctor)
          {case "_Tuple2":
-            switch (_v24._0.ctor)
-              {case "_Tuple2":
-                 return function () {
-                      var neighbours = A3(findNeighbours,
-                      universe,
-                      _v24._0._0,
-                      _v24._0._1);
-                      var evolvedCell = A2($Rules.applyRules,
-                      _v24._1,
-                      neighbours);
-                      return {ctor: "_Tuple2"
-                             ,_0: {ctor: "_Tuple2"
-                                  ,_0: _v24._0._0
-                                  ,_1: _v24._0._1}
-                             ,_1: evolvedCell};
-                   }();}
-              break;}
+            return function () {
+                 var neighbours = A2(findNeighbours,
+                 universe,
+                 _v22._0);
+                 var evolvedCell = A2($Rules.applyRules,
+                 _v22._1,
+                 neighbours);
+                 return {ctor: "_Tuple2"
+                        ,_0: _v22._0
+                        ,_1: evolvedCell};
+              }();}
          _U.badCase($moduleName,
-         "between lines 22 and 26");
+         "between lines 21 and 25");
       }();
    });
    var evolve = function (universe) {
       return function () {
-         var otherPositions = function (_v30) {
+         var otherPositions = function (_v26) {
             return function () {
-               switch (_v30.ctor)
+               switch (_v26.ctor)
                {case "_Tuple2":
                   return _L.fromArray([{ctor: "_Tuple2"
-                                       ,_0: _v30._0 - 1
-                                       ,_1: _v30._1 - 1}
+                                       ,_0: _v26._0 - 1
+                                       ,_1: _v26._1 - 1}
                                       ,{ctor: "_Tuple2"
-                                       ,_0: _v30._0
-                                       ,_1: _v30._1 - 1}
+                                       ,_0: _v26._0
+                                       ,_1: _v26._1 - 1}
                                       ,{ctor: "_Tuple2"
-                                       ,_0: _v30._0 + 1
-                                       ,_1: _v30._1 - 1}
+                                       ,_0: _v26._0 + 1
+                                       ,_1: _v26._1 - 1}
                                       ,{ctor: "_Tuple2"
-                                       ,_0: _v30._0 - 1
-                                       ,_1: _v30._1}
+                                       ,_0: _v26._0 - 1
+                                       ,_1: _v26._1}
                                       ,{ctor: "_Tuple2"
-                                       ,_0: _v30._0 + 1
-                                       ,_1: _v30._1}
+                                       ,_0: _v26._0 + 1
+                                       ,_1: _v26._1}
                                       ,{ctor: "_Tuple2"
-                                       ,_0: _v30._0 - 1
-                                       ,_1: _v30._1 + 1}
+                                       ,_0: _v26._0 - 1
+                                       ,_1: _v26._1 + 1}
                                       ,{ctor: "_Tuple2"
-                                       ,_0: _v30._0
-                                       ,_1: _v30._1 + 1}
+                                       ,_0: _v26._0
+                                       ,_1: _v26._1 + 1}
                                       ,{ctor: "_Tuple2"
-                                       ,_0: _v30._0 + 1
-                                       ,_1: _v30._1 + 1}]);}
+                                       ,_0: _v26._0 + 1
+                                       ,_1: _v26._1 + 1}]);}
                _U.badCase($moduleName,
-               "on line 66, column 29 to 117");
+               "between lines 56 and 59");
             }();
          };
          var cells = function (position) {
@@ -2006,22 +1974,8 @@ Elm.GameOfLife.make = function (_elm) {
          })($List.map(evolveCell(universe))(currentUniverse));
       }();
    };
-   var evolution = function (universe) {
-      return function () {
-         var evolver = F2(function (_v34,
-         universe) {
-            return function () {
-               return evolve(universe);
-            }();
-         });
-         return A3($Signal.foldp,
-         evolver,
-         universe,
-         $Time.every(1200));
-      }();
-   };
    _elm.GameOfLife.values = {_op: _op
-                            ,evolution: evolution
+                            ,evolve: evolve
                             ,findCell: findCell};
    return _elm.GameOfLife.values;
 };
@@ -3769,6 +3723,113 @@ Elm.Html.Attributes.make = function (_elm) {
                                  ,attribute: attribute};
    return _elm.Html.Attributes.values;
 };
+Elm.Html = Elm.Html || {};
+Elm.Html.Events = Elm.Html.Events || {};
+Elm.Html.Events.make = function (_elm) {
+   "use strict";
+   _elm.Html = _elm.Html || {};
+   _elm.Html.Events = _elm.Html.Events || {};
+   if (_elm.Html.Events.values)
+   return _elm.Html.Events.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "Html.Events",
+   $Basics = Elm.Basics.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Json$Decode = Elm.Json.Decode.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $VirtualDom = Elm.VirtualDom.make(_elm);
+   var keyCode = A2($Json$Decode._op[":="],
+   "keyCode",
+   $Json$Decode.$int);
+   var targetChecked = A2($Json$Decode.at,
+   _L.fromArray(["target"
+                ,"checked"]),
+   $Json$Decode.bool);
+   var targetValue = A2($Json$Decode.at,
+   _L.fromArray(["target"
+                ,"value"]),
+   $Json$Decode.string);
+   var defaultOptions = $VirtualDom.defaultOptions;
+   var Options = F2(function (a,
+   b) {
+      return {_: {}
+             ,preventDefault: b
+             ,stopPropagation: a};
+   });
+   var onWithOptions = $VirtualDom.onWithOptions;
+   var on = $VirtualDom.on;
+   var messageOn = F3(function (name,
+   addr,
+   msg) {
+      return A3(on,
+      name,
+      $Json$Decode.value,
+      function (_v0) {
+         return function () {
+            return A2($Signal.message,
+            addr,
+            msg);
+         }();
+      });
+   });
+   var onClick = messageOn("click");
+   var onDoubleClick = messageOn("dblclick");
+   var onMouseMove = messageOn("mousemove");
+   var onMouseDown = messageOn("mousedown");
+   var onMouseUp = messageOn("mouseup");
+   var onMouseEnter = messageOn("mouseenter");
+   var onMouseLeave = messageOn("mouseleave");
+   var onMouseOver = messageOn("mouseover");
+   var onMouseOut = messageOn("mouseout");
+   var onBlur = messageOn("blur");
+   var onFocus = messageOn("focus");
+   var onSubmit = messageOn("submit");
+   var onKey = F3(function (name,
+   addr,
+   handler) {
+      return A3(on,
+      name,
+      keyCode,
+      function (code) {
+         return A2($Signal.message,
+         addr,
+         handler(code));
+      });
+   });
+   var onKeyUp = onKey("keyup");
+   var onKeyDown = onKey("keydown");
+   var onKeyPress = onKey("keypress");
+   _elm.Html.Events.values = {_op: _op
+                             ,onBlur: onBlur
+                             ,onFocus: onFocus
+                             ,onSubmit: onSubmit
+                             ,onKeyUp: onKeyUp
+                             ,onKeyDown: onKeyDown
+                             ,onKeyPress: onKeyPress
+                             ,onClick: onClick
+                             ,onDoubleClick: onDoubleClick
+                             ,onMouseMove: onMouseMove
+                             ,onMouseDown: onMouseDown
+                             ,onMouseUp: onMouseUp
+                             ,onMouseEnter: onMouseEnter
+                             ,onMouseLeave: onMouseLeave
+                             ,onMouseOver: onMouseOver
+                             ,onMouseOut: onMouseOut
+                             ,on: on
+                             ,onWithOptions: onWithOptions
+                             ,defaultOptions: defaultOptions
+                             ,targetValue: targetValue
+                             ,targetChecked: targetChecked
+                             ,keyCode: keyCode
+                             ,Options: Options};
+   return _elm.Html.Events.values;
+};
 Elm.Json = Elm.Json || {};
 Elm.Json.Decode = Elm.Json.Decode || {};
 Elm.Json.Decode.make = function (_elm) {
@@ -4284,14 +4345,24 @@ Elm.Main.make = function (_elm) {
    _L = _N.List.make(_elm),
    $moduleName = "Main",
    $Basics = Elm.Basics.make(_elm),
-   $GameOfLife = Elm.GameOfLife.make(_elm),
    $Html = Elm.Html.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
+   $Start = Elm.Start.make(_elm),
    $Types = Elm.Types.make(_elm),
    $View = Elm.View.make(_elm);
+   var init = function (universe) {
+      return {_: {}
+             ,running: true
+             ,universe: universe
+             ,viewPort: A4($Types.ViewPort,
+             0,
+             0,
+             16,
+             16)};
+   };
    var create = function (positions) {
       return function () {
          var positionedCell = function (position) {
@@ -4373,20 +4444,17 @@ Elm.Main.make = function (_elm) {
                                      ,_0: 12
                                      ,_1: 14}]));
    var main = function () {
-      var viewPort = A4($View.ViewPort,
-      0,
-      0,
-      17,
-      17);
+      var model = init(pulsar);
       return A2($Signal.map,
-      $View.view(viewPort),
-      $GameOfLife.evolution(pulsar));
+      $View.view($Start.address),
+      $Start.start(model));
    }();
    _elm.Main.values = {_op: _op
                       ,create: create
                       ,blinker: blinker
                       ,spaceShip: spaceShip
                       ,pulsar: pulsar
+                      ,init: init
                       ,main: main};
    return _elm.Main.values;
 };
@@ -12550,9 +12618,9 @@ Elm.Rules.make = function (_elm) {
          switch (cell.ctor)
          {case "Alive":
             return _U.cmp(numberOfLive(neighbours),
-              2) < 0 ? $Types.Dies : $Types.NoOp;
+              2) < 0 ? $Types.Dies : $Types.Same;
             case "Dead":
-            return $Types.NoOp;}
+            return $Types.Same;}
          _U.badCase($moduleName,
          "between lines 15 and 23");
       }();
@@ -12566,10 +12634,10 @@ Elm.Rules.make = function (_elm) {
                  var numberOfLiveNeighbours = numberOfLive(neighbours);
                  return _U.eq(numberOfLiveNeighbours,
                  2) || _U.eq(numberOfLiveNeighbours,
-                 3) ? $Types.NoOp : $Types.Dies;
+                 3) ? $Types.Same : $Types.Dies;
               }();
             case "Dead":
-            return $Types.NoOp;}
+            return $Types.Same;}
          _U.badCase($moduleName,
          "between lines 28 and 39");
       }();
@@ -12580,9 +12648,9 @@ Elm.Rules.make = function (_elm) {
          switch (cell.ctor)
          {case "Alive":
             return _U.cmp(numberOfLive(neighbours),
-              3) > 0 ? $Types.Dies : $Types.NoOp;
+              3) > 0 ? $Types.Dies : $Types.Same;
             case "Dead":
-            return $Types.NoOp;}
+            return $Types.Same;}
          _U.badCase($moduleName,
          "between lines 44 and 52");
       }();
@@ -12592,15 +12660,15 @@ Elm.Rules.make = function (_elm) {
       return function () {
          switch (cell.ctor)
          {case "Alive":
-            return $Types.NoOp;
+            return $Types.Same;
             case "Dead":
             return _U.eq(numberOfLive(neighbours),
-              3) ? $Types.Revives : $Types.NoOp;}
+              3) ? $Types.Revives : $Types.Same;}
          _U.badCase($moduleName,
          "between lines 57 and 65");
       }();
    });
-   var reduceAction = F2(function (cell,
+   var reduceLifeCycle = F2(function (cell,
    neighbours) {
       return function () {
          var actions = _L.fromArray([A2(underPopulationRule,
@@ -12613,28 +12681,28 @@ Elm.Rules.make = function (_elm) {
                                     ,A2(reproductionRule,
                                     cell,
                                     neighbours)]);
-         var reducedAction = $List.head($List.filter(F2(function (x,
+         var reducedLifeCycle = $List.head($List.filter(F2(function (x,
          y) {
             return !_U.eq(x,y);
-         })($Types.NoOp))(actions));
+         })($Types.Same))(actions));
          return A2($Maybe.withDefault,
-         $Types.NoOp,
-         reducedAction);
+         $Types.Same,
+         reducedLifeCycle);
       }();
    });
    var applyRules = F2(function (cell,
    neighbours) {
       return function () {
-         var action = A2(reduceAction,
+         var action = A2(reduceLifeCycle,
          cell,
          neighbours);
          return function () {
             switch (action.ctor)
             {case "Dies":
                return $Types.Dead;
-               case "NoOp": return cell;
                case "Revives":
-               return $Types.Alive;}
+               return $Types.Alive;
+               case "Same": return cell;}
             _U.badCase($moduleName,
             "between lines 89 and 92");
          }();
@@ -12934,6 +13002,130 @@ Elm.Signal.make = function (_elm) {
                         ,forwardTo: forwardTo
                         ,Mailbox: Mailbox};
    return _elm.Signal.values;
+};
+Elm.Start = Elm.Start || {};
+Elm.Start.make = function (_elm) {
+   "use strict";
+   _elm.Start = _elm.Start || {};
+   if (_elm.Start.values)
+   return _elm.Start.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "Start",
+   $Basics = Elm.Basics.make(_elm),
+   $GameOfLife = Elm.GameOfLife.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Time = Elm.Time.make(_elm),
+   $Types = Elm.Types.make(_elm);
+   var update = F2(function (action,
+   model) {
+      return function () {
+         var yMax = model.viewPort.yMax;
+         var xMax = model.viewPort.xMax;
+         var yMin = model.viewPort.yMin;
+         var xMin = model.viewPort.xMin;
+         return function () {
+            switch (action.ctor)
+            {case "Down":
+               return _U.replace([["viewPort"
+                                  ,A4($Types.ViewPort,
+                                  xMin,
+                                  yMin + 1,
+                                  xMax,
+                                  yMax + 1)]],
+                 model);
+               case "Left":
+               return _U.replace([["viewPort"
+                                  ,A4($Types.ViewPort,
+                                  xMin - 1,
+                                  yMin,
+                                  xMax - 1,
+                                  yMax)]],
+                 model);
+               case "NoOp": return model;
+               case "Right":
+               return _U.replace([["viewPort"
+                                  ,A4($Types.ViewPort,
+                                  xMin + 1,
+                                  yMin,
+                                  xMax + 1,
+                                  yMax)]],
+                 model);
+               case "ToggleRunning":
+               return _U.replace([["running"
+                                  ,$Basics.not(model.running)]],
+                 model);
+               case "Up":
+               return _U.replace([["viewPort"
+                                  ,A4($Types.ViewPort,
+                                  xMin,
+                                  yMin - 1,
+                                  xMax,
+                                  yMax - 1)]],
+                 model);}
+            _U.badCase($moduleName,
+            "between lines 26 and 32");
+         }();
+      }();
+   });
+   var unifiedUpdate = F2(function (message,
+   model) {
+      return function () {
+         switch (message.ctor)
+         {case "Actions":
+            return A3($List.foldl,
+              update,
+              model,
+              message._0);
+            case "Evolve":
+            return model.running ? _U.replace([["universe"
+                                               ,$GameOfLife.evolve(model.universe)]],
+              model) : model;}
+         _U.badCase($moduleName,
+         "between lines 36 and 42");
+      }();
+   });
+   var Evolve = function (a) {
+      return {ctor: "Evolve"
+             ,_0: a};
+   };
+   var Actions = function (a) {
+      return {ctor: "Actions"
+             ,_0: a};
+   };
+   var singleton = function (action) {
+      return _L.fromArray([action]);
+   };
+   var actions = $Signal.mailbox(_L.fromArray([]));
+   var address = A2($Signal.forwardTo,
+   actions.address,
+   singleton);
+   var start = function (model) {
+      return function () {
+         var evolutionSignal = A2($Signal.map,
+         Evolve,
+         $Time.every(1000));
+         var modelSignal = A2($Signal.map,
+         Actions,
+         actions.signal);
+         var merged = A2($Signal.merge,
+         modelSignal,
+         evolutionSignal);
+         return A3($Signal.foldp,
+         unifiedUpdate,
+         model,
+         merged);
+      }();
+   };
+   _elm.Start.values = {_op: _op
+                       ,start: start
+                       ,address: address};
+   return _elm.Start.values;
 };
 Elm.String = Elm.String || {};
 Elm.String.make = function (_elm) {
@@ -13507,7 +13699,31 @@ Elm.Types.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
+   var Up = {ctor: "Up"};
+   var Down = {ctor: "Down"};
+   var Right = {ctor: "Right"};
+   var Left = {ctor: "Left"};
+   var ToggleRunning = {ctor: "ToggleRunning"};
    var NoOp = {ctor: "NoOp"};
+   var Model = F3(function (a,
+   b,
+   c) {
+      return {_: {}
+             ,running: c
+             ,universe: a
+             ,viewPort: b};
+   });
+   var ViewPort = F4(function (a,
+   b,
+   c,
+   d) {
+      return {_: {}
+             ,xMax: c
+             ,xMin: a
+             ,yMax: d
+             ,yMin: b};
+   });
+   var Same = {ctor: "Same"};
    var Revives = {ctor: "Revives"};
    var Dies = {ctor: "Dies"};
    var Dead = {ctor: "Dead"};
@@ -13517,7 +13733,15 @@ Elm.Types.make = function (_elm) {
                        ,Dead: Dead
                        ,Dies: Dies
                        ,Revives: Revives
-                       ,NoOp: NoOp};
+                       ,Same: Same
+                       ,ViewPort: ViewPort
+                       ,Model: Model
+                       ,NoOp: NoOp
+                       ,ToggleRunning: ToggleRunning
+                       ,Left: Left
+                       ,Right: Right
+                       ,Down: Down
+                       ,Up: Up};
    return _elm.Types.values;
 };
 Elm.View = Elm.View || {};
@@ -13539,58 +13763,9 @@ Elm.View.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
-   $Types = Elm.Types.make(_elm);
-   var cellStyle = function (cell) {
-      return function () {
-         var color = function () {
-            switch (cell.ctor)
-            {case "Alive": return "red";
-               case "Dead": return "gray";}
-            _U.badCase($moduleName,
-            "between lines 64 and 67");
-         }();
-         _op[":="] = F2(function (v0,
-         v1) {
-            return {ctor: "_Tuple2"
-                   ,_0: v0
-                   ,_1: v1};
-         });
-         return _L.fromArray([A2(_op[":="],
-                             "width",
-                             "35px")
-                             ,A2(_op[":="],"height","35px")
-                             ,A2(_op[":="],
-                             "font-size",
-                             "0.9em")
-                             ,A2(_op[":="],
-                             "background",
-                             color)
-                             ,A2(_op[":="],
-                             "border",
-                             "1px solid gray")
-                             ,A2(_op[":="],
-                             "color",
-                             "rgb(59, 51, 55)")]);
-      }();
-   };
-   var viewCell = function (_v1) {
-      return function () {
-         switch (_v1.ctor)
-         {case "_Tuple2":
-            switch (_v1._0.ctor)
-              {case "_Tuple2":
-                 return A2($Html.div,
-                   _L.fromArray([$Html$Attributes.style(cellStyle(_v1._1))]),
-                   _L.fromArray([$Html.text(A2($Basics._op["++"],
-                   $Basics.toString(_v1._0._0),
-                   A2($Basics._op["++"],
-                   ",",
-                   $Basics.toString(_v1._0._1))))]));}
-              break;}
-         _U.badCase($moduleName,
-         "between lines 43 and 45");
-      }();
-   };
+   $Types = Elm.Types.make(_elm),
+   $View$PlayButton = Elm.View.PlayButton.make(_elm),
+   $View$Triangle = Elm.View.Triangle.make(_elm);
    var selectRow = F2(function (universe,
    viewPort) {
       return $List.map($GameOfLife.findCell(universe))($List.map(F2(function (v0,
@@ -13601,6 +13776,106 @@ Elm.View.make = function (_elm) {
       })(viewPort.yMin))(_L.range(viewPort.xMin,
       viewPort.xMax)));
    });
+   var sort = function (positions) {
+      return function () {
+         var sorter = F2(function (_v0,
+         _v1) {
+            return function () {
+               switch (_v1.ctor)
+               {case "_Tuple2":
+                  switch (_v1._0.ctor)
+                    {case "_Tuple2":
+                       return function () {
+                            switch (_v0.ctor)
+                            {case "_Tuple2":
+                               switch (_v0._0.ctor)
+                                 {case "_Tuple2":
+                                    return _U.eq(_v0._0._0,
+                                      _v1._0._0) ? A2($Basics.compare,
+                                      _v0._0._1,
+                                      _v1._0._1) : A2($Basics.compare,
+                                      _v0._0._0,
+                                      _v1._0._0);}
+                                 break;}
+                            _U.badCase($moduleName,
+                            "between lines 17 and 20");
+                         }();}
+                    break;}
+               _U.badCase($moduleName,
+               "between lines 17 and 20");
+            }();
+         });
+         return A2($List.sortWith,
+         sorter,
+         positions);
+      }();
+   };
+   _op[":="] = F2(function (v0,
+   v1) {
+      return {ctor: "_Tuple2"
+             ,_0: v0
+             ,_1: v1};
+   });
+   var cellStyle = function (cell) {
+      return function () {
+         var color = function () {
+            switch (cell.ctor)
+            {case "Alive":
+               return "rgb(40, 33, 33)";
+               case "Dead":
+               return "rgb(120, 120, 120)";}
+            _U.badCase($moduleName,
+            "between lines 95 and 99");
+         }();
+         var background = function () {
+            switch (cell.ctor)
+            {case "Alive": return "red";
+               case "Dead":
+               return "rgb(180, 180, 180)";}
+            _U.badCase($moduleName,
+            "between lines 91 and 94");
+         }();
+         return _L.fromArray([A2(_op[":="],
+                             "width",
+                             "35px")
+                             ,A2(_op[":="],"height","35px")
+                             ,A2(_op[":="],
+                             "font-size",
+                             "0.7em")
+                             ,A2(_op[":="],"display","flex")
+                             ,A2(_op[":="],
+                             "justify-content",
+                             "center")
+                             ,A2(_op[":="],
+                             "align-items",
+                             "center")
+                             ,A2(_op[":="],
+                             "background",
+                             background)
+                             ,A2(_op[":="],
+                             "border",
+                             "1px solid rgb(203, 203, 203)")
+                             ,A2(_op[":="],"color",color)]);
+      }();
+   };
+   var viewCell = function (_v14) {
+      return function () {
+         switch (_v14.ctor)
+         {case "_Tuple2":
+            switch (_v14._0.ctor)
+              {case "_Tuple2":
+                 return A2($Html.div,
+                   _L.fromArray([$Html$Attributes.style(cellStyle(_v14._1))]),
+                   _L.fromArray([$Html.text(A2($Basics._op["++"],
+                   $Basics.toString(_v14._0._0),
+                   A2($Basics._op["++"],
+                   ",",
+                   $Basics.toString(_v14._0._1))))]));}
+              break;}
+         _U.badCase($moduleName,
+         "between lines 41 and 43");
+      }();
+   };
    var viewRow = F2(function (universe,
    viewPort) {
       return function () {
@@ -13614,55 +13889,11 @@ Elm.View.make = function (_elm) {
          A2($List.map,viewCell,row));
       }();
    });
-   var sort = function (positions) {
-      return function () {
-         var sorter = F2(function (_v7,
-         _v8) {
-            return function () {
-               switch (_v8.ctor)
-               {case "_Tuple2":
-                  switch (_v8._0.ctor)
-                    {case "_Tuple2":
-                       return function () {
-                            switch (_v7.ctor)
-                            {case "_Tuple2":
-                               switch (_v7._0.ctor)
-                                 {case "_Tuple2":
-                                    return _U.eq(_v7._0._0,
-                                      _v8._0._0) ? A2($Basics.compare,
-                                      _v7._0._1,
-                                      _v8._0._1) : A2($Basics.compare,
-                                      _v7._0._0,
-                                      _v8._0._0);}
-                                 break;}
-                            _U.badCase($moduleName,
-                            "between lines 19 and 22");
-                         }();}
-                    break;}
-               _U.badCase($moduleName,
-               "between lines 19 and 22");
-            }();
-         });
-         return A2($List.sortWith,
-         sorter,
-         positions);
-      }();
-   };
-   var ViewPort = F4(function (a,
-   b,
-   c,
-   d) {
-      return {_: {}
-             ,xMax: c
-             ,xMin: a
-             ,yMax: d
-             ,yMin: b};
-   });
-   var view = F2(function (viewPort,
+   var viewUniverse = F2(function (viewPort,
    universe) {
       return function () {
          var rowViewPort = function (row) {
-            return A4(ViewPort,
+            return A4($Types.ViewPort,
             viewPort.xMin,
             row,
             viewPort.xMax,
@@ -13681,10 +13912,235 @@ Elm.View.make = function (_elm) {
          rowsHtml);
       }();
    });
+   var view = F2(function (address,
+   model) {
+      return function () {
+         var playLabel = model.running ? "Pause" : "Play";
+         return A2($Html.div,
+         _L.fromArray([$Html$Attributes.style(_L.fromArray([A2(_op[":="],
+                                                           "display",
+                                                           "flex")
+                                                           ,A2(_op[":="],
+                                                           "flex-direction",
+                                                           "column")
+                                                           ,A2(_op[":="],
+                                                           "align-items",
+                                                           "center")]))]),
+         _L.fromArray([A2($View$PlayButton.button,
+                      playLabel,
+                      A2($Signal.forwardTo,
+                      address,
+                      function (_v20) {
+                         return function () {
+                            return $Types.ToggleRunning;
+                         }();
+                      }))
+                      ,$View$Triangle.up(A2($Signal.forwardTo,
+                      address,
+                      function (_v22) {
+                         return function () {
+                            return $Types.Up;
+                         }();
+                      }))
+                      ,A2($Html.div,
+                      _L.fromArray([$Html$Attributes.style(_L.fromArray([A2(_op[":="],
+                                                                        "display",
+                                                                        "flex")
+                                                                        ,A2(_op[":="],
+                                                                        "flex-direction",
+                                                                        "row")
+                                                                        ,A2(_op[":="],
+                                                                        "align-items",
+                                                                        "center")]))]),
+                      _L.fromArray([$View$Triangle.left(A2($Signal.forwardTo,
+                                   address,
+                                   function (_v24) {
+                                      return function () {
+                                         return $Types.Left;
+                                      }();
+                                   }))
+                                   ,A2(viewUniverse,
+                                   model.viewPort,
+                                   model.universe)
+                                   ,$View$Triangle.right(A2($Signal.forwardTo,
+                                   address,
+                                   function (_v26) {
+                                      return function () {
+                                         return $Types.Right;
+                                      }();
+                                   }))]))
+                      ,$View$Triangle.down(A2($Signal.forwardTo,
+                      address,
+                      function (_v28) {
+                         return function () {
+                            return $Types.Down;
+                         }();
+                      }))]));
+      }();
+   });
    _elm.View.values = {_op: _op
-                      ,view: view
-                      ,ViewPort: ViewPort};
+                      ,view: view};
    return _elm.View.values;
+};
+Elm.View = Elm.View || {};
+Elm.View.PlayButton = Elm.View.PlayButton || {};
+Elm.View.PlayButton.make = function (_elm) {
+   "use strict";
+   _elm.View = _elm.View || {};
+   _elm.View.PlayButton = _elm.View.PlayButton || {};
+   if (_elm.View.PlayButton.values)
+   return _elm.View.PlayButton.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "View.PlayButton",
+   $Basics = Elm.Basics.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   _op[":="] = F2(function (v0,
+   v1) {
+      return {ctor: "_Tuple2"
+             ,_0: v0
+             ,_1: v1};
+   });
+   var buttonStyle = _L.fromArray([A2(_op[":="],
+                                  "color",
+                                  "red")
+                                  ,A2(_op[":="],
+                                  "font-size",
+                                  "2em")]);
+   var button = F2(function (label,
+   address) {
+      return A2($Html.div,
+      _L.fromArray([$Html$Attributes.style(buttonStyle)
+                   ,A2($Html$Events.onClick,
+                   address,
+                   {ctor: "_Tuple0"})]),
+      _L.fromArray([$Html.text(label)]));
+   });
+   _elm.View.PlayButton.values = {_op: _op
+                                 ,button: button};
+   return _elm.View.PlayButton.values;
+};
+Elm.View = Elm.View || {};
+Elm.View.Triangle = Elm.View.Triangle || {};
+Elm.View.Triangle.make = function (_elm) {
+   "use strict";
+   _elm.View = _elm.View || {};
+   _elm.View.Triangle = _elm.View.Triangle || {};
+   if (_elm.View.Triangle.values)
+   return _elm.View.Triangle.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "View.Triangle",
+   $Basics = Elm.Basics.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var styledDiv = F2(function (address,
+   style$) {
+      return A2($Html.div,
+      _L.fromArray([$Html$Attributes.style(style$)
+                   ,A2($Html$Events.onClick,
+                   address,
+                   {ctor: "_Tuple0"})]),
+      _L.fromArray([]));
+   });
+   var solidBorder = "30px solid red";
+   var transparentBorder = "30px solid transparent";
+   _op[":="] = F2(function (v0,
+   v1) {
+      return {ctor: "_Tuple2"
+             ,_0: v0
+             ,_1: v1};
+   });
+   var sharedStyle = _L.fromArray([A2(_op[":="],
+                                  "margin",
+                                  "20px")
+                                  ,A2(_op[":="],"width","0")
+                                  ,A2(_op[":="],"height","0")]);
+   var leftStyle = A2($Basics._op["++"],
+   sharedStyle,
+   _L.fromArray([A2(_op[":="],
+                "border-top",
+                transparentBorder)
+                ,A2(_op[":="],
+                "border-bottom",
+                transparentBorder)
+                ,A2(_op[":="],
+                "border-right",
+                solidBorder)]));
+   var left = function (address) {
+      return A2(styledDiv,
+      address,
+      leftStyle);
+   };
+   var rightStyle = A2($Basics._op["++"],
+   sharedStyle,
+   _L.fromArray([A2(_op[":="],
+                "border-top",
+                transparentBorder)
+                ,A2(_op[":="],
+                "border-bottom",
+                transparentBorder)
+                ,A2(_op[":="],
+                "border-left",
+                solidBorder)]));
+   var right = function (address) {
+      return A2(styledDiv,
+      address,
+      rightStyle);
+   };
+   var upStyle = A2($Basics._op["++"],
+   sharedStyle,
+   _L.fromArray([A2(_op[":="],
+                "border-right",
+                transparentBorder)
+                ,A2(_op[":="],
+                "border-left",
+                transparentBorder)
+                ,A2(_op[":="],
+                "border-bottom",
+                solidBorder)]));
+   var up = function (address) {
+      return A2(styledDiv,
+      address,
+      upStyle);
+   };
+   var downStyle = A2($Basics._op["++"],
+   sharedStyle,
+   _L.fromArray([A2(_op[":="],
+                "border-right",
+                transparentBorder)
+                ,A2(_op[":="],
+                "border-left",
+                transparentBorder)
+                ,A2(_op[":="],
+                "border-top",
+                solidBorder)]));
+   var down = function (address) {
+      return A2(styledDiv,
+      address,
+      downStyle);
+   };
+   _elm.View.Triangle.values = {_op: _op
+                               ,left: left
+                               ,right: right
+                               ,up: up
+                               ,down: down};
+   return _elm.View.Triangle.values;
 };
 Elm.VirtualDom = Elm.VirtualDom || {};
 Elm.VirtualDom.make = function (_elm) {
