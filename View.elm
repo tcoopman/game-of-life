@@ -4,6 +4,9 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Types exposing (..)
 import GameOfLife exposing (findCell)
+import View.Triangle as Triangle
+
+(:=) = (,)
 
 type alias ViewPort =
   { xMin: X
@@ -44,8 +47,34 @@ viewCell ((x, y), cell) =
     [style <| cellStyle cell]
     [ text ((toString x) ++ "," ++(toString y))]
 
+
+
 view : ViewPort -> Universe -> Html
 view viewPort universe =
+  div
+    [ style
+      [ "display" := "flex"
+      , "flex-direction" := "column"
+      , "align-items" := "center"
+      ]
+    ]
+    [ Triangle.up
+    , div
+        [ style
+          [ "display" := "flex"
+          , "flex-direction" := "row"
+          , "align-items" := "center"
+          ]
+        ]
+        [ Triangle.left
+        , viewUniverse viewPort universe
+        , Triangle.right
+        ]
+    , Triangle.down
+    ]
+
+viewUniverse : ViewPort -> Universe -> Html
+viewUniverse viewPort universe =
   let
     rowsRange = [viewPort.yMin .. viewPort.yMax]
     rowViewPort row = ViewPort viewPort.xMin row viewPort.xMax row
@@ -59,7 +88,6 @@ view viewPort universe =
 cellStyle : Cell -> List (String, String)
 cellStyle cell =
   let
-    (:=) = (,)
     color =
       case cell of
         Alive -> "red"
