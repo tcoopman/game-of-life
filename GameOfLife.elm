@@ -5,25 +5,25 @@ import Types exposing (..)
 import Time exposing (..)
 import Set exposing (..)
 
-findNeighbours : Universe -> X -> Y -> Neighbours
-findNeighbours universe x y =
-  let
-    isNeighbour ((x', y'), _) =
-      (abs (x' - x) <= 1)
-      && (abs (y' - y) <= 1)
-      && ((x,y) /= (x', y'))
-  in
-    universe
-      |> List.filter isNeighbour
-      |> List.map snd
+isNeighbour : Position -> Position -> Bool
+isNeighbour (x1, y1) (x2, y2) =
+  (abs (x1 - x2) <= 1)
+  && (abs (y1 - y2) <= 1)
+  && ((x1, y1) /= (x2, y2))
+
+findNeighbours : Universe -> Position -> Neighbours
+findNeighbours universe position =
+  universe
+    |> List.filter (isNeighbour position << fst)
+    |> List.map snd
 
 evolveCell : Universe -> PositionedCell -> PositionedCell
-evolveCell universe ((x, y), cell) =
+evolveCell universe (position, cell) =
   let
-    neighbours = findNeighbours universe x y
+    neighbours = findNeighbours universe position
     evolvedCell = applyRules cell neighbours
   in
-    ((x, y), evolvedCell)
+    (position, evolvedCell)
 
 findMaybeCell : Universe -> Position -> Maybe PositionedCell
 findMaybeCell universe (x, y) =
