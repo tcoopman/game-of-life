@@ -78,8 +78,4 @@ evolve universe =
 
 evolution : Universe -> Signal Universe
 evolution universe =
-  let
-    evolver _ universe =
-      evolve universe
-  in
-    Signal.foldp evolver universe (every 500)
+  Signal.foldp (\_ -> evolve) universe (every 500)
