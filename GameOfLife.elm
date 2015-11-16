@@ -40,16 +40,6 @@ findCell universe position =
     Nothing -> (position, Dead)
     Just (_, cell) -> (position, cell)
 
-dropDuplicates : List comparable -> List comparable
-dropDuplicates list =
-  let
-    step next (set, acc) =
-      if Set.member next set
-        then (set, acc)
-        else (Set.insert next set, next::acc)
-  in
-    List.foldl step (Set.empty, []) list |> snd |> List.reverse
-
 dedupe : Universe-> Universe
 dedupe universe =
   let
