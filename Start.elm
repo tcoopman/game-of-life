@@ -25,18 +25,18 @@ update action model =
   in
     case action of
       NoOp  -> model
-      ToggleRunning -> { model | running <- not model.running }
-      Up    -> { model | viewPort <- ViewPort xMin (yMin - 1) xMax (yMax - 1)}
-      Down  -> { model | viewPort <- ViewPort xMin (yMin + 1) xMax (yMax + 1)}
-      Left  -> { model | viewPort <- ViewPort (xMin - 1 ) yMin (xMax - 1) yMax}
-      Right -> { model | viewPort <- ViewPort (xMin + 1 ) yMin (xMax + 1) yMax}
+      ToggleRunning -> { model | running = not model.running }
+      Up    -> { model | viewPort = ViewPort xMin (yMin - 1) xMax (yMax - 1)}
+      Down  -> { model | viewPort = ViewPort xMin (yMin + 1) xMax (yMax + 1)}
+      Left  -> { model | viewPort = ViewPort (xMin - 1 ) yMin (xMax - 1) yMax}
+      Right -> { model | viewPort = ViewPort (xMin + 1 ) yMin (xMax + 1) yMax}
 
 unifiedUpdate : Message -> Model -> Model
 unifiedUpdate message model =
   case message of
     Evolve _ ->
       if model.running then
-        { model | universe <- evolve model.universe}
+        { model | universe = evolve model.universe}
       else
         model
     Actions actions -> List.foldl update model actions
