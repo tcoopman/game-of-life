@@ -1,7 +1,6 @@
 import Html exposing (Html)
 import Types exposing (..)
 import View exposing (..)
-import GameOfLife exposing (evolve)
 import Start exposing (start, address)
 
 create : List Position-> Universe
