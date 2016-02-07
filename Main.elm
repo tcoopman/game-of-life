@@ -2,6 +2,7 @@ import Html exposing (Html)
 import Types exposing (..)
 import View exposing (..)
 import Start exposing (start, address)
+import FromPlainText exposing (toUniverse)
 
 create : List Position-> Universe
 create positions =
@@ -31,16 +32,28 @@ pulsar =
   , (4, 14), (5, 14), (6, 14), (10, 14), (11, 14), (12, 14)
   ]
 
+glider = toUniverse """
+........................O...........
+......................O.O...........
+............OO......OO............OO
+...........O...O....OO............OO
+OO........O.....O...OO..............
+OO........O...O.OO....O.O...........
+..........O.....O.......O...........
+...........O...O....................
+............OO......................
+"""
+
 init : Universe -> Model
 init universe =
   { universe = universe
-  , viewPort = ViewPort 0 0 16 16
+  , viewPort = ViewPort 0 0 20 20 
   , running = True
   }
 
 main : Signal Html
 main =
   let
-    model = init pulsar
+    model = init glider
   in
     Signal.map (view address) (Start.start model)

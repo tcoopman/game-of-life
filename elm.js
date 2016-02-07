@@ -12245,6 +12245,12 @@ Elm.Main.make = function (_elm) {
                                   ,{ctor: "_Tuple2",_0: 2,_1: 1}
                                   ,{ctor: "_Tuple2",_0: 1,_1: 2}
                                   ,{ctor: "_Tuple2",_0: 2,_1: 2}]));
+   var main = function () {
+      var model = init(spaceShip);
+      return A2($Signal.map,
+      $View.view($Start.address),
+      $Start.start(model));
+   }();
    var pulsar = create(_U.list([{ctor: "_Tuple2",_0: 4,_1: 2}
                                ,{ctor: "_Tuple2",_0: 5,_1: 2}
                                ,{ctor: "_Tuple2",_0: 6,_1: 2}
@@ -12293,12 +12299,6 @@ Elm.Main.make = function (_elm) {
                                ,{ctor: "_Tuple2",_0: 10,_1: 14}
                                ,{ctor: "_Tuple2",_0: 11,_1: 14}
                                ,{ctor: "_Tuple2",_0: 12,_1: 14}]));
-   var main = function () {
-      var model = init(pulsar);
-      return A2($Signal.map,
-      $View.view($Start.address),
-      $Start.start(model));
-   }();
    return _elm.Main.values = {_op: _op
                              ,create: create
                              ,blinker: blinker
