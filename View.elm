@@ -132,12 +132,12 @@ cellStyle cell size =
         Dead ->
           "rgb(120, 120, 120)"
 
-    size =
+    cellSize =
       (toString size) ++ "px"
   in
-    [ "width" := size
-    , "height" := size
-    , "font-size" := "0.7em"
+    [ "width" := cellSize
+    , "height" := cellSize
+    , "font-size" := ((toString (size // 3)) ++ "px")
     , "display" := "flex"
     , "justify-content" := "center"
     , "align-items" := "center"

@@ -11687,6 +11687,8 @@ Elm.Examples.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm),
    $Types = Elm.Types.make(_elm);
    var _op = {};
+   var thunderbird = $FromPlainText.toUniverse("\nOOO\n\n.O\n.O\n.O\n");
+   var bakersDozen = $FromPlainText.toUniverse("\nOO.........OO\nOOOO.O.....OO\nO.O..OOO\n...........O\n....OO....O.O\n....O.....O..O....O\n...........OO....OO\n\n...............OOO..O.O\n..........OO.....O.OOOO\n..........OO.........OO\n");
    var glider = $FromPlainText.toUniverse("\n........................O...........\n......................O.O...........\n............OO......OO............OO\n...........O...O....OO............OO\nOO........O.....O...OO..............\nOO........O...O.OO....O.O...........\n..........O.....O.......O...........\n...........O...O....................\n............OO......................\n");
    var create = function (positions) {
       var positionedCell = function (position) {    return {ctor: "_Tuple2",_0: position,_1: $Types.Alive};};
@@ -11749,8 +11751,18 @@ Elm.Examples.make = function (_elm) {
    var all = _U.list([{ctor: "_Tuple2",_0: "blinker",_1: blinker}
                      ,{ctor: "_Tuple2",_0: "spaceShip",_1: spaceShip}
                      ,{ctor: "_Tuple2",_0: "pulsar",_1: pulsar}
-                     ,{ctor: "_Tuple2",_0: "glider",_1: glider}]);
-   return _elm.Examples.values = {_op: _op,create: create,blinker: blinker,spaceShip: spaceShip,pulsar: pulsar,glider: glider,all: all};
+                     ,{ctor: "_Tuple2",_0: "glider",_1: glider}
+                     ,{ctor: "_Tuple2",_0: "bakersDozen",_1: bakersDozen}
+                     ,{ctor: "_Tuple2",_0: "thunderbird",_1: thunderbird}]);
+   return _elm.Examples.values = {_op: _op
+                                 ,create: create
+                                 ,blinker: blinker
+                                 ,spaceShip: spaceShip
+                                 ,pulsar: pulsar
+                                 ,glider: glider
+                                 ,bakersDozen: bakersDozen
+                                 ,thunderbird: thunderbird
+                                 ,all: all};
 };Elm.Rules = Elm.Rules || {};
 Elm.Rules.make = function (_elm) {
    "use strict";
@@ -12044,12 +12056,12 @@ Elm.View.make = function (_elm) {
    };
    _op[":="] = F2(function (v0,v1) {    return {ctor: "_Tuple2",_0: v0,_1: v1};});
    var cellStyle = F2(function (cell,size) {
-      var size = A2($Basics._op["++"],$Basics.toString(size),"px");
+      var cellSize = A2($Basics._op["++"],$Basics.toString(size),"px");
       var color = function () {    var _p6 = cell;if (_p6.ctor === "Alive") {    return "rgb(40, 33, 33)";} else {    return "rgb(120, 120, 120)";}}();
       var background = function () {    var _p7 = cell;if (_p7.ctor === "Alive") {    return "red";} else {    return "rgb(180, 180, 180)";}}();
-      return _U.list([A2(_op[":="],"width",size)
-                     ,A2(_op[":="],"height",size)
-                     ,A2(_op[":="],"font-size","0.7em")
+      return _U.list([A2(_op[":="],"width",cellSize)
+                     ,A2(_op[":="],"height",cellSize)
+                     ,A2(_op[":="],"font-size",A2($Basics._op["++"],$Basics.toString(size / 3 | 0),"px"))
                      ,A2(_op[":="],"display","flex")
                      ,A2(_op[":="],"justify-content","center")
                      ,A2(_op[":="],"align-items","center")
@@ -12153,7 +12165,7 @@ Elm.Start.make = function (_elm) {
    var actions = $Signal.mailbox(_U.list([]));
    var address = A2($Signal.forwardTo,actions.address,singleton);
    var start = function (model) {
-      var evolutionSignal = A2($Signal.map,Evolve,$Time.every(500));
+      var evolutionSignal = A2($Signal.map,Evolve,$Time.every(100));
       var modelSignal = A2($Signal.map,Actions,actions.signal);
       var merged = A2($Signal.merge,modelSignal,evolutionSignal);
       return A3($Signal.foldp,unifiedUpdate,model,merged);

@@ -91,6 +91,32 @@ OO........O...O.OO....O.O...........
 """
 
 
-all : List (String, Universe)
+bakersDozen =
+  toUniverse """
+OO.........OO
+OOOO.O.....OO
+O.O..OOO
+...........O
+....OO....O.O
+....O.....O..O....O
+...........OO....OO
+
+...............OOO..O.O
+..........OO.....O.OOOO
+..........OO.........OO
+"""
+
+
+thunderbird =
+  toUniverse """
+OOO
+
+.O
+.O
+.O
+"""
+
+
+all : List ( String, Universe )
 all =
-  [ ("blinker", blinker), ("spaceShip", spaceShip), ("pulsar", pulsar), ("glider", glider) ]
+  [ ( "blinker", blinker ), ( "spaceShip", spaceShip ), ( "pulsar", pulsar ), ( "glider", glider ), ( "bakersDozen", bakersDozen ), ( "thunderbird", thunderbird ) ]

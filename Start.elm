@@ -96,7 +96,7 @@ start model =
       Signal.map Actions actions.signal
 
     evolutionSignal =
-      Signal.map Evolve (every 500)
+      Signal.map Evolve (every 100)
 
     merged =
       Signal.merge modelSignal evolutionSignal
