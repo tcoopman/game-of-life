@@ -68,6 +68,13 @@ update action model =
       ZoomIn ->
         { model | viewPort = ViewPort (xMin + 1) (yMin + 1) (xMax - 1) (yMax - 1) (cellSize + 2) }
 
+      UpdateUniverse string ->
+        let
+          newUniverse =
+            snd (Maybe.withDefault ( "", [] ) (List.head (List.filter (\i -> (fst i) == string) model.examples)))
+        in
+          { model | universe = newUniverse }
+
 
 unifiedUpdate : Message -> Model -> Model
 unifiedUpdate message model =
@@ -89,7 +96,7 @@ start model =
       Signal.map Actions actions.signal
 
     evolutionSignal =
-      Signal.map Evolve (every 1000)
+      Signal.map Evolve (every 500)
 
     merged =
       Signal.merge modelSignal evolutionSignal

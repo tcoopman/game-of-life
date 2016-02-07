@@ -2,12 +2,11 @@ module View (view) where
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick)
+import Html.Events exposing (onClick, on, targetValue)
 import Types exposing (..)
 import GameOfLife exposing (findCell)
 import View.Triangle as Triangle
 import View.PlayButton as PlayButton
-
 
 (:=) =
   (,)
@@ -61,6 +60,9 @@ view address model =
         "Pause"
       else
         "Play"
+
+    selectOption (name, _) =
+      option [] [ text name ]
   in
     div
       [ style
@@ -72,6 +74,9 @@ view address model =
       [ PlayButton.button playLabel (Signal.forwardTo address (\_ -> ToggleRunning))
       , PlayButton.button "Zoom out" (Signal.forwardTo address (\_ -> ZoomOut))
       , PlayButton.button "Zoom in" (Signal.forwardTo address (\_ -> ZoomIn))
+      , select
+          [on "change" targetValue (\str -> Signal.message address (UpdateUniverse str))]
+          (List.map selectOption model.examples)
       , Triangle.up (Signal.forwardTo address (\_ -> Up))
       , div
           [ style

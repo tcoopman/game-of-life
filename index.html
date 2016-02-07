@@ -11620,8 +11620,9 @@ Elm.Types.make = function (_elm) {
    var ZoomIn = {ctor: "ZoomIn"};
    var ZoomOut = {ctor: "ZoomOut"};
    var ToggleRunning = {ctor: "ToggleRunning"};
+   var UpdateUniverse = function (a) {    return {ctor: "UpdateUniverse",_0: a};};
    var NoOp = {ctor: "NoOp"};
-   var Model = F3(function (a,b,c) {    return {universe: a,viewPort: b,running: c};});
+   var Model = F4(function (a,b,c,d) {    return {universe: a,examples: b,viewPort: c,running: d};});
    var ViewPort = F5(function (a,b,c,d,e) {    return {xMin: a,yMin: b,xMax: c,yMax: d,cellSize: e};});
    var Same = {ctor: "Same"};
    var Revives = {ctor: "Revives"};
@@ -11637,6 +11638,7 @@ Elm.Types.make = function (_elm) {
                               ,ViewPort: ViewPort
                               ,Model: Model
                               ,NoOp: NoOp
+                              ,UpdateUniverse: UpdateUniverse
                               ,ToggleRunning: ToggleRunning
                               ,ZoomOut: ZoomOut
                               ,ZoomIn: ZoomIn
@@ -11744,8 +11746,11 @@ Elm.Examples.make = function (_elm) {
                                ,{ctor: "_Tuple2",_0: 10,_1: 14}
                                ,{ctor: "_Tuple2",_0: 11,_1: 14}
                                ,{ctor: "_Tuple2",_0: 12,_1: 14}]));
-   var list = _U.list([blinker,spaceShip,pulsar,glider]);
-   return _elm.Examples.values = {_op: _op,create: create,blinker: blinker,spaceShip: spaceShip,pulsar: pulsar,glider: glider,list: list};
+   var all = _U.list([{ctor: "_Tuple2",_0: "blinker",_1: blinker}
+                     ,{ctor: "_Tuple2",_0: "spaceShip",_1: spaceShip}
+                     ,{ctor: "_Tuple2",_0: "pulsar",_1: pulsar}
+                     ,{ctor: "_Tuple2",_0: "glider",_1: glider}]);
+   return _elm.Examples.values = {_op: _op,create: create,blinker: blinker,spaceShip: spaceShip,pulsar: pulsar,glider: glider,all: all};
 };Elm.Rules = Elm.Rules || {};
 Elm.Rules.make = function (_elm) {
    "use strict";
@@ -12013,6 +12018,7 @@ Elm.View.make = function (_elm) {
    $GameOfLife = Elm.GameOfLife.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
@@ -12070,21 +12076,30 @@ Elm.View.make = function (_elm) {
       return A2($Html.div,_U.list([]),rowsHtml);
    });
    var view = F2(function (address,model) {
+      var selectOption = function (_p10) {    var _p11 = _p10;return A2($Html.option,_U.list([]),_U.list([$Html.text(_p11._0)]));};
       var playLabel = model.running ? "Pause" : "Play";
       return A2($Html.div,
       _U.list([$Html$Attributes.style(_U.list([A2(_op[":="],"display","flex"),A2(_op[":="],"flex-direction","column"),A2(_op[":="],"align-items","center")]))]),
-      _U.list([A2($View$PlayButton.button,playLabel,A2($Signal.forwardTo,address,function (_p10) {    return $Types.ToggleRunning;}))
-              ,A2($View$PlayButton.button,"Zoom out",A2($Signal.forwardTo,address,function (_p11) {    return $Types.ZoomOut;}))
-              ,A2($View$PlayButton.button,"Zoom in",A2($Signal.forwardTo,address,function (_p12) {    return $Types.ZoomIn;}))
-              ,$View$Triangle.up(A2($Signal.forwardTo,address,function (_p13) {    return $Types.Up;}))
+      _U.list([A2($View$PlayButton.button,playLabel,A2($Signal.forwardTo,address,function (_p12) {    return $Types.ToggleRunning;}))
+              ,A2($View$PlayButton.button,"Zoom out",A2($Signal.forwardTo,address,function (_p13) {    return $Types.ZoomOut;}))
+              ,A2($View$PlayButton.button,"Zoom in",A2($Signal.forwardTo,address,function (_p14) {    return $Types.ZoomIn;}))
+              ,A2($Html.select,
+              _U.list([A3($Html$Events.on,
+              "change",
+              $Html$Events.targetValue,
+              function (str) {
+                 return A2($Signal.message,address,$Types.UpdateUniverse(str));
+              })]),
+              A2($List.map,selectOption,model.examples))
+              ,$View$Triangle.up(A2($Signal.forwardTo,address,function (_p15) {    return $Types.Up;}))
               ,A2($Html.div,
               _U.list([$Html$Attributes.style(_U.list([A2(_op[":="],"display","flex")
                                                       ,A2(_op[":="],"flex-direction","row")
                                                       ,A2(_op[":="],"align-items","center")]))]),
-              _U.list([$View$Triangle.left(A2($Signal.forwardTo,address,function (_p14) {    return $Types.Left;}))
+              _U.list([$View$Triangle.left(A2($Signal.forwardTo,address,function (_p16) {    return $Types.Left;}))
                       ,A2(viewUniverse,model.viewPort,model.universe)
-                      ,$View$Triangle.right(A2($Signal.forwardTo,address,function (_p15) {    return $Types.Right;}))]))
-              ,$View$Triangle.down(A2($Signal.forwardTo,address,function (_p16) {    return $Types.Down;}))]));
+                      ,$View$Triangle.right(A2($Signal.forwardTo,address,function (_p17) {    return $Types.Right;}))]))
+              ,$View$Triangle.down(A2($Signal.forwardTo,address,function (_p18) {    return $Types.Down;}))]));
    });
    return _elm.View.values = {_op: _op,view: view};
 };Elm.Start = Elm.Start || {};
@@ -12118,7 +12133,11 @@ Elm.Start.make = function (_elm) {
          case "Left": return _U.update(model,{viewPort: A5($Types.ViewPort,xMin - 1,yMin,xMax - 1,yMax,cellSize)});
          case "Right": return _U.update(model,{viewPort: A5($Types.ViewPort,xMin + 1,yMin,xMax + 1,yMax,cellSize)});
          case "ZoomOut": return _U.update(model,{viewPort: A5($Types.ViewPort,xMin - 1,yMin - 1,xMax + 1,yMax + 1,cellSize - 2)});
-         default: return _U.update(model,{viewPort: A5($Types.ViewPort,xMin + 1,yMin + 1,xMax - 1,yMax - 1,cellSize + 2)});}
+         case "ZoomIn": return _U.update(model,{viewPort: A5($Types.ViewPort,xMin + 1,yMin + 1,xMax - 1,yMax - 1,cellSize + 2)});
+         default: var newUniverse = $Basics.snd(A2($Maybe.withDefault,
+           {ctor: "_Tuple2",_0: "",_1: _U.list([])},
+           $List.head(A2($List.filter,function (i) {    return _U.eq($Basics.fst(i),_p0._0);},model.examples))));
+           return _U.update(model,{universe: newUniverse});}
    });
    var unifiedUpdate = F2(function (message,model) {
       var _p1 = message;
@@ -12134,7 +12153,7 @@ Elm.Start.make = function (_elm) {
    var actions = $Signal.mailbox(_U.list([]));
    var address = A2($Signal.forwardTo,actions.address,singleton);
    var start = function (model) {
-      var evolutionSignal = A2($Signal.map,Evolve,$Time.every(1000));
+      var evolutionSignal = A2($Signal.map,Evolve,$Time.every(500));
       var modelSignal = A2($Signal.map,Actions,actions.signal);
       var merged = A2($Signal.merge,modelSignal,evolutionSignal);
       return A3($Signal.foldp,unifiedUpdate,model,merged);
@@ -12158,7 +12177,7 @@ Elm.Main.make = function (_elm) {
    $Types = Elm.Types.make(_elm),
    $View = Elm.View.make(_elm);
    var _op = {};
-   var init = function (universe) {    return {universe: universe,viewPort: A5($Types.ViewPort,0,0,20,20,35),running: true};};
+   var init = function (universe) {    return {universe: universe,examples: $Examples.all,viewPort: A5($Types.ViewPort,0,0,20,20,35),running: true};};
    var main = function () {    var model = init($Examples.glider);return A2($Signal.map,$View.view($Start.address),$Start.start(model));}();
    return _elm.Main.values = {_op: _op,init: init,main: main};
 };</script></head><body><script type="text/javascript">Elm.fullscreen(Elm.Main)</script></body></html>

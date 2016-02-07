@@ -47,6 +47,7 @@ type alias ViewPort =
 
 type alias Model =
   { universe : Universe
+  , examples : List (String, Universe)
   , viewPort : ViewPort
   , running : Bool
   }
@@ -54,6 +55,7 @@ type alias Model =
 
 type Action
   = NoOp
+  | UpdateUniverse String
   | ToggleRunning
   | ZoomOut
   | ZoomIn

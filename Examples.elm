@@ -91,6 +91,6 @@ OO........O...O.OO....O.O...........
 """
 
 
-list : List Universe
-list =
-  [ blinker, spaceShip, pulsar, glider ]
+all : List (String, Universe)
+all =
+  [ ("blinker", blinker), ("spaceShip", spaceShip), ("pulsar", pulsar), ("glider", glider) ]

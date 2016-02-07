@@ -4,12 +4,13 @@ import Html exposing (Html)
 import Types exposing (..)
 import View exposing (..)
 import Start exposing (start, address)
-import Examples exposing (glider)
+import Examples exposing (glider, all)
 
 
 init : Universe -> Model
 init universe =
   { universe = universe
+  , examples = Examples.all
   , viewPort = ViewPort 0 0 20 20 35
   , running = True
   }
