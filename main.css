@@ -1,0 +1,25 @@
+html {
+    height: 100vh;
+}
+
+body {
+    height: 100vh;
+    background-color: rgb(52, 73, 94);
+    color: rgb(189, 195, 199);
+}
+
+.cellCell {
+    flex: auto;
+    align-items: center;
+    border: 1px solid rgb(203, 203, 203);
+}
+
+.cellDeadCell {
+    color: rgb(52, 73, 94);
+    background-color: rgb(189, 195, 199);
+}
+
+.cellLiveCell {
+    color: rgb(137, 96, 158);
+    background-color: rgb(231, 76, 60);
+}

@@ -7,6 +7,12 @@ import Types exposing (..)
 import GameOfLife exposing (findCell)
 import View.Triangle as Triangle
 import View.PlayButton as PlayButton
+import Styles exposing (..)
+
+
+{ class, classList } =
+  cellNamespace
+
 
 (:=) =
   (,)
@@ -48,7 +54,9 @@ viewRow universe viewPort =
 viewCell : Int -> PositionedCell -> Html
 viewCell size ( ( x, y ), cell ) =
   div
-    [ style <| cellStyle cell size ]
+    [ classList [ ( Cell, True ), ( LiveCell, cell == Alive ), ( DeadCell, cell == Dead ) ]
+    , style <| cellSize cell size
+    ]
     [ text ((toString x) ++ "," ++ (toString y)) ]
 
 
@@ -61,7 +69,7 @@ view address model =
       else
         "Play"
 
-    selectOption (name, _) =
+    selectOption ( name, _ ) =
       option [] [ text name ]
   in
     div
@@ -75,7 +83,7 @@ view address model =
       , PlayButton.button "Zoom out" (Signal.forwardTo address (\_ -> ZoomOut))
       , PlayButton.button "Zoom in" (Signal.forwardTo address (\_ -> ZoomIn))
       , select
-          [on "change" targetValue (\str -> Signal.message address (UpdateUniverse str))]
+          [ on "change" targetValue (\str -> Signal.message address (UpdateUniverse str)) ]
           (List.map selectOption model.examples)
       , Triangle.up (Signal.forwardTo address (\_ -> Up))
       , div
@@ -113,35 +121,13 @@ viewUniverse viewPort universe =
       rowsHtml
 
 
-cellStyle : Cell -> Int -> List ( String, String )
-cellStyle cell size =
+cellSize : Cell -> Int -> List ( String, String )
+cellSize cell size =
   let
-    background =
-      case cell of
-        Alive ->
-          "red"
-
-        Dead ->
-          "rgb(180, 180, 180)"
-
-    color =
-      case cell of
-        Alive ->
-          "rgb(40, 33, 33)"
-
-        Dead ->
-          "rgb(120, 120, 120)"
-
     cellSize =
       (toString size) ++ "px"
   in
     [ "width" := cellSize
     , "height" := cellSize
     , "font-size" := ((toString (size // 3)) ++ "px")
-    , "display" := "flex"
-    , "justify-content" := "center"
-    , "align-items" := "center"
-    , "background" := background
-    , "border" := "1px solid rgb(203, 203, 203)"
-    , "color" := color
     ]

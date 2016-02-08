@@ -4,7 +4,7 @@
     "repository": "https://github.com/tcoopman/game-of-life.git",
     "license": "MIT",
     "source-directories": [
-        "."
+        ".", "./elm-packages-extra/elm-css/src"
     ],
     "exposed-modules": [],
     "dependencies": {
