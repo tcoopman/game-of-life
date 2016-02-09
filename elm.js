@@ -13869,7 +13869,7 @@ Elm.GameOfLife.make = function (_elm) {
       function (_p21) {
          return A2(F2(function (x,y) {    return _U.eq(x,y);}),$Types.Alive,$Basics.snd(_p21));
       },
-      A2($List.map,evolveCell(universe),currentUniverse));
+      A2($Debug.log,"current universe",A2($List.map,evolveCell(universe),currentUniverse)));
    };
    return _elm.GameOfLife.values = {_op: _op,evolve: evolve,findCell: findCell};
 };
