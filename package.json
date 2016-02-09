@@ -1,0 +1,21 @@
+{
+  "name": "game-of-life-elm",
+  "version": "1.0.0",
+  "description": "Working version of the Game Of Life in Elm.",
+  "main": "elm.js",
+  "scripts": {
+    "css": "node elm-packages-extra/elm-css/elm-css.js Stylesheets.elm",
+    "start": "elm-make Main.elm --output elm.js",
+    "all": "npm run start && npm run css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tcoopman/game-of-life.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tcoopman/game-of-life/issues"
+  },
+  "homepage": "https://github.com/tcoopman/game-of-life#readme"
+}
