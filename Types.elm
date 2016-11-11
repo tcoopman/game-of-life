@@ -1,65 +1,66 @@
-module Types (..) where
+module Types exposing (..)
 
 
 type Cell
-  = Alive
-  | Dead
+    = Alive
+    | Dead
 
 
 type alias Neighbours =
-  List Cell
+    List Cell
 
 
 type LifeCycle
-  = Dies
-  | Revives
-  | Same
+    = Dies
+    | Revives
+    | Same
 
 
 type alias X =
-  Int
+    Int
 
 
 type alias Y =
-  Int
+    Int
 
 
 type alias Position =
-  ( X, Y )
+    ( X, Y )
 
 
 type alias PositionedCell =
-  ( Position, Cell )
+    ( Position, Cell )
 
 
 type alias Universe =
-  List PositionedCell
+    List PositionedCell
 
 
 type alias ViewPort =
-  { xMin : X
-  , yMin : Y
-  , xMax : X
-  , yMax : Y
-  , cellSize : Int
-  }
+    { xMin : X
+    , yMin : Y
+    , xMax : X
+    , yMax : Y
+    , cellSize : Int
+    }
 
 
 type alias Model =
-  { universe : Universe
-  , examples : List (String, Universe)
-  , viewPort : ViewPort
-  , running : Bool
-  }
+    { universe : Universe
+    , examples : List ( String, Universe )
+    , viewPort : ViewPort
+    , running : Bool
+    }
 
 
-type Action
-  = NoOp
-  | UpdateUniverse String
-  | ToggleRunning
-  | ZoomOut
-  | ZoomIn
-  | Left
-  | Right
-  | Down
-  | Up
+type Msg
+    = NoOp
+    | Evolve
+    | UpdateUniverse String
+    | ToggleRunning
+    | ZoomOut
+    | ZoomIn
+    | Left
+    | Right
+    | Down
+    | Up

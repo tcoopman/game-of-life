@@ -1,13 +1,13 @@
-module Rules (applyRules) where
+module Rules exposing (applyRules)
 
 import Types exposing (..)
 
 
 numberOfLive : Neighbours -> Int
 numberOfLive neighbours =
-  neighbours
-    |> List.filter ((==) Alive)
-    |> List.length
+    neighbours
+        |> List.filter ((==) Alive)
+        |> List.length
 
 
 
@@ -16,15 +16,15 @@ numberOfLive neighbours =
 
 underPopulationRule : Cell -> Neighbours -> LifeCycle
 underPopulationRule cell neighbours =
-  case cell of
-    Alive ->
-      if numberOfLive neighbours < 2 then
-        Dies
-      else
-        Same
+    case cell of
+        Alive ->
+            if numberOfLive neighbours < 2 then
+                Dies
+            else
+                Same
 
-    Dead ->
-      Same
+        Dead ->
+            Same
 
 
 
@@ -33,19 +33,19 @@ underPopulationRule cell neighbours =
 
 livesOnRule : Cell -> Neighbours -> LifeCycle
 livesOnRule cell neighbours =
-  case cell of
-    Alive ->
-      let
-        numberOfLiveNeighbours =
-          numberOfLive neighbours
-      in
-        if ((numberOfLiveNeighbours == 2) || (numberOfLiveNeighbours == 3)) then
-          Same
-        else
-          Dies
+    case cell of
+        Alive ->
+            let
+                numberOfLiveNeighbours =
+                    numberOfLive neighbours
+            in
+                if ((numberOfLiveNeighbours == 2) || (numberOfLiveNeighbours == 3)) then
+                    Same
+                else
+                    Dies
 
-    Dead ->
-      Same
+        Dead ->
+            Same
 
 
 
@@ -54,15 +54,15 @@ livesOnRule cell neighbours =
 
 overPopulationRule : Cell -> Neighbours -> LifeCycle
 overPopulationRule cell neighbours =
-  case cell of
-    Alive ->
-      if numberOfLive neighbours > 3 then
-        Dies
-      else
-        Same
+    case cell of
+        Alive ->
+            if numberOfLive neighbours > 3 then
+                Dies
+            else
+                Same
 
-    Dead ->
-      Same
+        Dead ->
+            Same
 
 
 
@@ -71,58 +71,58 @@ overPopulationRule cell neighbours =
 
 reproductionRule : Cell -> Neighbours -> LifeCycle
 reproductionRule cell neighbours =
-  case cell of
-    Alive ->
-      Same
+    case cell of
+        Alive ->
+            Same
 
-    Dead ->
-      if numberOfLive neighbours == 3 then
-        Revives
-      else
-        Same
+        Dead ->
+            if numberOfLive neighbours == 3 then
+                Revives
+            else
+                Same
 
 
 reduceLifeCycle : Cell -> Neighbours -> LifeCycle
 reduceLifeCycle cell neighbours =
-  let
-    actions =
-      [ underPopulationRule cell neighbours
-      , livesOnRule cell neighbours
-      , overPopulationRule cell neighbours
-      , reproductionRule cell neighbours
-      ]
+    let
+        actions =
+            [ underPopulationRule cell neighbours
+            , livesOnRule cell neighbours
+            , overPopulationRule cell neighbours
+            , reproductionRule cell neighbours
+            ]
 
-    reducedLifeCycle =
-      actions
-        |> List.filter ((/=) Same)
-        |> List.head
-  in
-    Maybe.withDefault Same reducedLifeCycle
+        reducedLifeCycle =
+            actions
+                |> List.filter ((/=) Same)
+                |> List.head
+    in
+        Maybe.withDefault Same reducedLifeCycle
 
 
 applyRules : Cell -> Neighbours -> Cell
 applyRules cell neighbours =
-  let
-    action =
-      reduceLifeCycle cell neighbours
-  in
-    case action of
-      Dies ->
-        Dead
+    let
+        action =
+            reduceLifeCycle cell neighbours
+    in
+        case action of
+            Dies ->
+                Dead
 
-      Revives ->
-        Alive
+            Revives ->
+                Alive
 
-      Same ->
-        cell
+            Same ->
+                cell
 
 
 applyRulesTest : List ( Bool, String )
 applyRulesTest =
-  -- Any live cell with fewer than two live neighbours dies, as if caused by under-population.
-  [ ( (applyRules Alive [ Dead ]) == Dead, "Underpopulation" )
-  , ( (applyRules Alive [ Alive, Alive, Dead ]) == Alive, "Lives on with 2" )
-  , ( (applyRules Alive [ Alive, Alive, Alive, Alive ]) == Dead, "Overpopulation" )
-  , ( (applyRules Dead [ Alive, Alive, Alive ]) == Alive, "reproduction" )
-  , ( (applyRules Dead [ Dead, Dead, Dead, Alive, Alive, Alive ]) == Alive, "reproduction" )
-  ]
+    -- Any live cell with fewer than two live neighbours dies, as if caused by under-population.
+    [ ( (applyRules Alive [ Dead ]) == Dead, "Underpopulation" )
+    , ( (applyRules Alive [ Alive, Alive, Dead ]) == Alive, "Lives on with 2" )
+    , ( (applyRules Alive [ Alive, Alive, Alive, Alive ]) == Dead, "Overpopulation" )
+    , ( (applyRules Dead [ Alive, Alive, Alive ]) == Alive, "reproduction" )
+    , ( (applyRules Dead [ Dead, Dead, Dead, Alive, Alive, Alive ]) == Alive, "reproduction" )
+    ]

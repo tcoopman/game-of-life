@@ -1,25 +1,36 @@
-module Main (..) where
+module Main exposing (..)
 
 import Html exposing (Html)
+import Html.App as App
 import Types exposing (..)
 import View exposing (..)
-import Start exposing (start, address)
+import Start
 import Examples exposing (glider, all)
+import Time exposing (millisecond)
 
 
 init : Universe -> Model
 init universe =
-  { universe = universe
-  , examples = Examples.all
-  , viewPort = ViewPort 0 0 20 20 35
-  , running = True
-  }
+    { universe = universe
+    , examples = Examples.all
+    , viewPort = ViewPort 0 0 20 20 35
+    , running = True
+    }
 
 
-main : Signal Html
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Time.every (200 * millisecond) (\_ -> Evolve)
+
+
 main =
-  let
-    model =
-      init glider
-  in
-    Signal.map (view address) (Start.start model)
+    let
+        model =
+            init glider
+    in
+        App.program
+            { init = ( init glider, Cmd.none )
+            , view = view
+            , update = Start.update
+            , subscriptions = subscriptions
+            }

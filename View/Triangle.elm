@@ -1,67 +1,89 @@
-module View.Triangle (left, right, up, down) where
+module View.Triangle exposing (left, right, up, down)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 
-(:=) = (,)
 
-transparentBorder = "30px solid transparent"
-solidBorder = "30px solid red"
+(:=) =
+    (,)
+
+
+transparentBorder =
+    "30px solid transparent"
+
+
+solidBorder =
+    "30px solid red"
+
 
 sharedStyle =
-  [ "margin" := "20px"
-  , "width" := "0"
-  , "height" := "0"
-  ]
+    [ "margin" := "20px"
+    , "width" := "0"
+    , "height" := "0"
+    ]
 
-styledDiv : Signal.Address () -> List (String, String) -> Html
-styledDiv address style' =
-  div
-    [ style style'
-    , onClick address ()
-    ] []
 
-left : Signal.Address () -> Html
-left address = styledDiv address leftStyle
+styledDiv : List ( String, String ) -> Html ()
+styledDiv style' =
+    div
+        [ style style'
+        , onClick ()
+        ]
+        []
 
-right : Signal.Address () -> Html
-right address = styledDiv address rightStyle
 
-down : Signal.Address () -> Html
-down address = styledDiv address downStyle
+left : Html ()
+left =
+    styledDiv leftStyle
 
-up : Signal.Address () -> Html
-up address = styledDiv address upStyle
 
-leftStyle : List (String, String)
+right : Html ()
+right =
+    styledDiv rightStyle
+
+
+down : Html ()
+down =
+    styledDiv downStyle
+
+
+up : Html ()
+up =
+    styledDiv upStyle
+
+
+leftStyle : List ( String, String )
 leftStyle =
-  sharedStyle ++
-  [ "border-top" := transparentBorder
-  , "border-bottom" := transparentBorder
-  , "border-right" := solidBorder
-  ]
+    sharedStyle
+        ++ [ "border-top" := transparentBorder
+           , "border-bottom" := transparentBorder
+           , "border-right" := solidBorder
+           ]
 
-rightStyle : List (String, String)
+
+rightStyle : List ( String, String )
 rightStyle =
-  sharedStyle ++
-  [ "border-top" := transparentBorder
-  , "border-bottom" := transparentBorder
-  , "border-left" := solidBorder
-  ]
+    sharedStyle
+        ++ [ "border-top" := transparentBorder
+           , "border-bottom" := transparentBorder
+           , "border-left" := solidBorder
+           ]
 
-upStyle : List (String, String)
+
+upStyle : List ( String, String )
 upStyle =
-  sharedStyle ++
-  [ "border-right" := transparentBorder
-  , "border-left" := transparentBorder
-  , "border-bottom" := solidBorder
-  ]
+    sharedStyle
+        ++ [ "border-right" := transparentBorder
+           , "border-left" := transparentBorder
+           , "border-bottom" := solidBorder
+           ]
 
-downStyle : List (String, String)
+
+downStyle : List ( String, String )
 downStyle =
-  sharedStyle ++
-  [ "border-right" := transparentBorder
-  , "border-left" := transparentBorder
-  , "border-top" := solidBorder
-  ]
+    sharedStyle
+        ++ [ "border-right" := transparentBorder
+           , "border-left" := transparentBorder
+           , "border-top" := solidBorder
+           ]
