@@ -25,9 +25,9 @@ sharedStyle =
 
 
 styledDiv : List ( String, String ) -> Html ()
-styledDiv style' =
+styledDiv style_ =
     div
-        [ style style'
+        [ style style_
         , onClick ()
         ]
         []

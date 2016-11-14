@@ -15,8 +15,8 @@ isNeighbour ( x1, y1 ) ( x2, y2 ) =
 findNeighbours : Universe -> Position -> Neighbours
 findNeighbours universe position =
     universe
-        |> List.filter (isNeighbour position << fst)
-        |> List.map snd
+        |> List.filter (isNeighbour position << Tuple.first)
+        |> List.map Tuple.second
 
 
 evolveCell : Universe -> PositionedCell -> PositionedCell
@@ -34,8 +34,8 @@ evolveCell universe ( position, cell ) =
 findMaybeCell : Universe -> Position -> Maybe PositionedCell
 findMaybeCell universe ( x, y ) =
     let
-        inBounds ( ( x', y' ), _ ) =
-            x' == x && y' == y
+        inBounds ( ( x_, y_ ), _ ) =
+            x_ == x && y_ == y
     in
         universe
             |> List.filter inBounds
@@ -56,7 +56,7 @@ dedupe : Universe -> Universe
 dedupe universe =
     let
         positions =
-            List.map fst universe
+            List.map Tuple.first universe
 
         dedupedPositions =
             positions
@@ -85,11 +85,11 @@ evolve universe =
 
         currentUniverse =
             universe
-                |> List.map fst
+                |> List.map Tuple.first
                 |> List.map cells
                 |> List.concat
                 |> dedupe
     in
         currentUniverse
             |> List.map (evolveCell universe)
-            |> List.filter ((==) Alive << snd)
+            |> List.filter ((==) Alive << Tuple.second)

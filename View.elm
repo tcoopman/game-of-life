@@ -1,8 +1,7 @@
 module View exposing (view)
 
-import Html exposing (..)
-import Html.App exposing (map)
-import Html.Attributes exposing (..)
+import Html exposing (Html, div, text, option, select, map)
+import Html.Attributes exposing (style)
 import Html.Events exposing (onClick, on, targetValue)
 import Types exposing (..)
 import GameOfLife exposing (findCell)
@@ -32,7 +31,7 @@ sort positions =
 
 selectRow : Universe -> ViewPort -> List PositionedCell
 selectRow universe viewPort =
-    [viewPort.xMin..viewPort.xMax]
+    List.range viewPort.xMin viewPort.xMax
         |> List.map ((,) viewPort.yMin)
         |> List.map (findCell universe)
 
@@ -103,7 +102,7 @@ viewUniverse : ViewPort -> Universe -> Html msg
 viewUniverse viewPort universe =
     let
         rowsRange =
-            [viewPort.yMin..viewPort.yMax]
+            List.range viewPort.yMin viewPort.yMax
 
         rowViewPort row =
             ViewPort viewPort.xMin row viewPort.xMax row viewPort.cellSize

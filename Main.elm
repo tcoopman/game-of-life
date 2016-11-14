@@ -1,7 +1,6 @@
 module Main exposing (..)
 
 import Html exposing (Html)
-import Html.App as App
 import Types exposing (..)
 import View exposing (..)
 import Start
@@ -28,7 +27,7 @@ main =
         model =
             init glider
     in
-        App.program
+        Html.program
             { init = ( init glider, Cmd.none )
             , view = view
             , update = Start.update

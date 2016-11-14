@@ -52,7 +52,7 @@ update msg model =
                     UpdateUniverse string ->
                         let
                             newUniverse =
-                                snd (Maybe.withDefault ( "", [] ) (List.head (List.filter (\i -> (fst i) == string) model.examples)))
+                                Tuple.second (Maybe.withDefault ( "", [] ) (List.head (List.filter (\i -> (Tuple.first i) == string) model.examples)))
                         in
                             { model | universe = newUniverse }
 
