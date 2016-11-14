@@ -57,9 +57,6 @@ update msg model =
                             { model | universe = newUniverse }
 
                     Evolve ->
-                        if model.running then
-                            { model | universe = evolve model.universe }
-                        else
-                            model
+                        { model | universe = evolve model.universe }
         in
             ( newModel, Cmd.none )

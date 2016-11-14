@@ -19,7 +19,10 @@ init universe =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Time.every (200 * millisecond) (\_ -> Evolve)
+    if model.running then
+        Time.every (200 * millisecond) (\_ -> Evolve)
+    else
+        Sub.none
 
 
 main =
